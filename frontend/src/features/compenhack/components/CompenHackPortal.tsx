@@ -19,7 +19,7 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
     {
       id: "1",
       sender: "bot",
-      text: "¡Hola! Bienvenido a CompenHack. Soy tu asistente virtual de bienestar integral. ¿En qué puedo orientarte hoy sobre tus citas médicas, subsidio familiar o sedes de recreación?",
+      text: "¡Hola! Bienvenido a CompenHack. Soy tu asistente virtual de bienestar integral. ¿En qué puedo orientarte hoy sobre tus citas médicas o subsidio familiar?",
       timestamp: "Ahora",
     },
   ]);
@@ -68,7 +68,7 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
         sender: "bot",
         text:
           err?.response?.data?.detail ||
-          "[403 ERROR] La solicitud no pudo ser procesada. Interceptado por JoanVector Guardrail.",
+          "[403 ERROR] La solicitud fue bloqueada por el sistema perimetral de seguridad JoanVector.",
         blocked: true,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
@@ -79,186 +79,94 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F7F7] text-[#383B3B] font-sans relative selection:bg-[#FF6600] selection:text-white">
+    <div className="min-h-screen bg-[#F7F7F7] text-[#383B3B] font-sans relative selection:bg-[#FF6600] selection:text-white flex flex-col justify-between">
       {/* Top Banner to switch back to SOC Console */}
-      <div className="bg-[#18181b] text-zinc-300 text-xs py-2 px-4 flex items-center justify-between border-b border-zinc-700">
+      <div className="bg-[#111114] text-zinc-300 text-xs py-2 px-6 flex items-center justify-between border-b border-zinc-800">
         <div className="flex items-center gap-2 font-mono">
           <span className="w-2 h-2 bg-emerald-400 inline-block animate-pulse"></span>
-          <span>MODO SIMULACIÓN WEB EMPRESA // PORTAL COMPENHACK</span>
+          <span className="text-[11px] text-zinc-400">SIMULACIÓN WEB EMPRESA // PORTAL COMPENHACK</span>
         </div>
         <button
           onClick={onBackToSOC}
-          className="px-3 py-1 font-mono text-xs bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-600 transition-colors cursor-pointer"
+          className="px-3 py-1 font-mono text-[11px] bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 transition-colors cursor-pointer"
         >
           [← VOLVER A CONSOLA SOC JOANVECTOR]
         </button>
       </div>
 
-      {/* Compensar Exact Top Bar (Personas | Empresas) */}
-      <div className="bg-white border-b border-gray-200 text-xs text-[#777777] hidden md:block">
-        <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-6 font-semibold">
-            <span className="text-[#FF6600] border-b-2 border-[#FF6600] pb-2 cursor-pointer">
-              Personas
-            </span>
-            <span className="hover:text-[#383B3B] cursor-pointer">Empresas</span>
-            <span className="hover:text-[#383B3B] cursor-pointer">Salud EPS</span>
-          </div>
-          <div className="flex items-center gap-5">
-            <span className="hover:underline cursor-pointer">Puntos de atención</span>
-            <span className="hover:underline cursor-pointer">Transparencia</span>
-            <span className="hover:underline cursor-pointer">Línea Bogotá: 601 3077001</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Compensar Exact Main Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
-          {/* Logo CompenHack (6 círculos estilo Compensar en C) */}
-          <div className="flex items-center gap-3 cursor-pointer">
-            <div className="relative w-8 h-8 flex items-center justify-center">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FF6600] absolute top-0 left-3"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FF6600] absolute top-1 left-0"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FF6600] absolute bottom-1 left-0"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FF6600] absolute bottom-0 left-3"></div>
-              <div className="w-2.5 h-2.5 rounded-full bg-[#FF6600] absolute top-3.5 right-1"></div>
-            </div>
-            <div>
-              <span className="text-2xl font-black tracking-tight text-[#FF6600]">
-                compen<span className="text-[#383B3B]">hack</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Search Bar Compensar */}
-          <div className="flex-1 max-w-lg hidden sm:block">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="¿Qué estás buscando hoy en CompenHack?"
-                className="w-full bg-[#F7F7F7] border border-gray-300 rounded-full px-5 py-2.5 text-xs text-[#383B3B] placeholder-gray-400 focus:outline-none focus:border-[#FF6600] transition-colors"
-                disabled
-              />
-              <span className="absolute right-4 top-2.5 text-gray-400 text-xs">
-                [BUSCAR]
-              </span>
-            </div>
-          </div>
-
-          {/* Action Button */}
+      {/* Clean, minimalist Compensar Header */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          {/* Logo CompenHack */}
           <div className="flex items-center gap-3">
+            <div className="relative w-7 h-7 flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-[#FF6600] absolute top-0 left-2.5"></div>
+              <div className="w-2 h-2 rounded-full bg-[#FF6600] absolute top-1 left-0"></div>
+              <div className="w-2 h-2 rounded-full bg-[#FF6600] absolute bottom-1 left-0"></div>
+              <div className="w-2 h-2 rounded-full bg-[#FF6600] absolute bottom-0 left-2.5"></div>
+              <div className="w-2 h-2 rounded-full bg-[#FF6600] absolute top-2.5 right-0.5"></div>
+            </div>
+            <span className="text-2xl font-black tracking-tight text-[#FF6600]">
+              compen<span className="text-[#383B3B]">hack</span>
+            </span>
+          </div>
+
+          {/* Simple right action */}
+          <button
+            onClick={() => setIsChatOpen(true)}
+            className="bg-[#FF6600] hover:bg-[#DB3C0B] text-white px-5 py-2 rounded-full font-bold text-xs tracking-wide transition-colors cursor-pointer"
+          >
+            Portal Personas
+          </button>
+        </div>
+      </header>
+
+      {/* Clean Main Hero Body (Sin sobrecarga de tarjetas) */}
+      <main className="max-w-4xl mx-auto px-6 py-20 flex-1 flex flex-col items-center justify-center text-center">
+        <div className="space-y-6 max-w-2xl">
+          <span className="inline-block px-3.5 py-1 rounded-full bg-[#FFE5CC] text-[#FF6600] font-bold text-xs uppercase tracking-wider">
+            Bienestar Integral
+          </span>
+
+          <h1 className="text-4xl sm:text-5xl font-black text-[#383B3B] tracking-tight leading-tight">
+            Tu tranquilidad y la de tu familia en un solo lugar.
+          </h1>
+
+          <p className="text-base text-[#777777] leading-relaxed">
+            Consulta tus citas médicas, subsidio familiar y programas recreativos de forma rápida.
+          </p>
+
+          {/* Mensajito solicitado */}
+          <div className="inline-block px-6 py-3 bg-white border border-orange-200 shadow-sm text-sm font-bold text-[#FF6600] rounded-xl">
+            ¿Estás listo? :)
+          </div>
+
+          <div className="pt-2">
             <button
-              className="bg-[#FF6600] hover:bg-[#DB3C0B] text-white px-5 py-2.5 rounded-full font-bold text-xs tracking-wide shadow-sm transition-colors cursor-pointer"
+              onClick={() => setIsChatOpen(true)}
+              className="bg-[#FF6600] hover:bg-[#DB3C0B] text-white px-8 py-3.5 rounded-full font-bold text-xs shadow-md transition-all cursor-pointer hover:shadow-lg"
             >
-              Transacciones en línea
+              Abrir Asistente Virtual
             </button>
           </div>
         </div>
-
-        {/* Categories Bar */}
-        <nav className="border-t border-gray-100 bg-white hidden lg:block">
-          <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center gap-8 text-xs font-semibold text-[#383B3B]">
-            <span className="hover:text-[#FF6600] cursor-pointer">Salud & Citas EPS</span>
-            <span className="hover:text-[#FF6600] cursor-pointer">Subsidio Monetario</span>
-            <span className="hover:text-[#FF6600] cursor-pointer">Vivienda & Hábitat</span>
-            <span className="hover:text-[#FF6600] cursor-pointer">Recreación & Piscinas</span>
-            <span className="hover:text-[#FF6600] cursor-pointer">Créditos de Bienestar</span>
-            <span className="hover:text-[#FF6600] cursor-pointer">Educación & Cursos</span>
-          </div>
-        </nav>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-6 py-10 space-y-10">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-orange-50 via-white to-orange-50/40 border border-orange-200/80 rounded-2xl p-8 sm:p-12 relative overflow-hidden shadow-sm">
-          <div className="max-w-2xl space-y-4 relative z-10">
-            <span className="inline-block px-3 py-1 rounded-full bg-[#FFE5CC] text-[#FF6600] font-bold text-xs uppercase tracking-wider">
-              Bienestar Integral Familiar
-            </span>
-            <h1 className="text-3xl sm:text-5xl font-black text-[#383B3B] tracking-tight leading-tight">
-              Tu tranquilidad y la de tu familia en un solo lugar.
-            </h1>
-            <p className="text-sm sm:text-base text-[#777777] leading-relaxed">
-              Disfruta de nuestros programas de subsidio, salud, vivienda y recreación.
-            </p>
-
-            {/* Requested Easter Egg Message */}
-            <div className="p-4 bg-white border-l-4 border-[#FF6600] rounded-r-lg shadow-sm text-sm font-semibold text-[#FF6600]">
-              ¿Estás listo? :)
-            </div>
-
-            <div className="flex items-center gap-4 pt-2">
-              <button
-                onClick={() => setIsChatOpen(true)}
-                className="bg-[#FF6600] hover:bg-[#DB3C0B] text-white px-6 py-3 rounded-full font-bold text-xs shadow-md transition-all cursor-pointer"
-              >
-                Hablar con Asistente Digital
-              </button>
-              <button
-                className="bg-white border border-gray-300 hover:border-gray-400 text-[#383B3B] px-6 py-3 rounded-full font-bold text-xs transition-colors cursor-pointer"
-              >
-                Conocer Sedes
-              </button>
-            </div>
-          </div>
-
-          {/* Decorative background circle */}
-          <div className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-orange-100/60 pointer-events-none"></div>
-        </div>
-
-        {/* 4 Feature Cards (Compensar style) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#FF6600] flex items-center justify-center font-bold text-xs">
-              01
-            </div>
-            <h3 className="font-bold text-base text-[#383B3B]">Citas Médicas EPS</h3>
-            <p className="text-xs text-[#777777] leading-relaxed">
-              Agenda tu consulta médica general, odontología o exámenes especializados en nuestras sedes.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#FF6600] flex items-center justify-center font-bold text-xs">
-              02
-            </div>
-            <h3 className="font-bold text-base text-[#383B3B]">Subsidio Monetario</h3>
-            <p className="text-xs text-[#777777] leading-relaxed">
-              Consulta el estado de tu giro mensual por beneficiario y cobra de manera ágil y digital.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#FF6600] flex items-center justify-center font-bold text-xs">
-              03
-            </div>
-            <h3 className="font-bold text-base text-[#383B3B]">Sedes Recreativas</h3>
-            <p className="text-xs text-[#777777] leading-relaxed">
-              Reserva pasadías en nuestras sedes campestres, escuelas deportivas y centros acuáticos.
-            </p>
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#FF6600] flex items-center justify-center font-bold text-xs">
-              04
-            </div>
-            <h3 className="font-bold text-base text-[#383B3B]">Crédito Fácil</h3>
-            <p className="text-xs text-[#777777] leading-relaxed">
-              Solicita tu crédito con tasas preferenciales para educación, libre inversión o turismo.
-            </p>
-          </div>
-        </div>
       </main>
+
+      {/* Minimal Footer */}
+      <footer className="border-t border-gray-200 bg-white py-6 text-center text-xs text-gray-500">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span>CompenHack • Caja de Compensación Familiar</span>
+          <span className="text-[11px] text-gray-400">Protección perimetral por JoanVector Guardrail</span>
+        </div>
+      </footer>
 
       {/* Floating Chat Trigger Button in Bottom Right Corner */}
       {!isChatOpen && (
         <button
           onClick={() => setIsChatOpen(true)}
-          className="fixed bottom-6 right-6 z-40 bg-[#FF6600] hover:bg-[#DB3C0B] text-white p-4 rounded-full shadow-2xl flex items-center gap-3 transition-transform hover:scale-105 cursor-pointer border-2 border-white"
+          className="fixed bottom-6 right-6 z-40 bg-[#FF6600] hover:bg-[#DB3C0B] text-white px-5 py-3.5 rounded-full shadow-2xl flex items-center gap-3 transition-transform hover:scale-105 cursor-pointer border-2 border-white"
         >
-          <span className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></span>
+          <span className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
           <span className="font-bold text-xs tracking-wide">
             Asistente CompenHack
           </span>
@@ -267,18 +175,18 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
 
       {/* The Floating Customer Chat Widget */}
       {isChatOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] h-[560px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5">
+        <div className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] h-[520px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in fade-in">
           {/* Chat Header in Compensar Orange */}
-          <div className="bg-[#FF6600] text-white p-4 flex items-center justify-between shadow-md">
+          <div className="bg-[#FF6600] text-white p-4 flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">
                 CH
               </div>
               <div>
                 <div className="font-bold text-sm leading-tight">
-                  Asistente Virtual CompenHack
+                  Asistente CompenHack
                 </div>
-                <div className="text-[11px] text-orange-100 flex items-center gap-1.5 mt-0.5">
+                <div className="text-[10px] text-orange-100 flex items-center gap-1.5 mt-0.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-300"></span>
                   <span>En línea • Protegido por JoanVector</span>
                 </div>
@@ -286,7 +194,7 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
             </div>
             <button
               onClick={() => setIsChatOpen(false)}
-              className="text-white/80 hover:text-white font-mono text-sm px-2 py-1 bg-black/10 rounded cursor-pointer"
+              className="text-white/80 hover:text-white font-mono text-xs px-2 py-1 bg-black/10 rounded cursor-pointer"
             >
               [X]
             </button>
@@ -302,7 +210,7 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
                   className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] p-3.5 rounded-2xl leading-relaxed ${
+                    className={`max-w-[85%] p-3 rounded-2xl leading-relaxed ${
                       isUser
                         ? "bg-[#383B3B] text-white rounded-br-none"
                         : m.blocked
@@ -320,9 +228,9 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
             })}
 
             {loading && (
-              <div className="flex items-center gap-2 text-xs text-gray-500 bg-white p-3 rounded-2xl border border-gray-200 w-fit">
+              <div className="flex items-center gap-2 text-xs text-gray-500 bg-white p-2.5 rounded-2xl border border-gray-200 w-fit">
                 <span className="w-2 h-2 rounded-full bg-[#FF6600] animate-pulse"></span>
-                <span>Procesando consulta en el gateway...</span>
+                <span>Inspeccionando mensaje...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -332,15 +240,9 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
           <div className="p-2.5 bg-gray-50 border-t border-gray-200 flex flex-wrap gap-1.5 text-[10px]">
             <button
               onClick={() => handleSendMessage("¿Cómo agendo una cita médica?")}
-              className="px-2.5 py-1 bg-white hover:bg-orange-50 border border-gray-300 hover:border-[#FF6600] rounded-full text-gray-700 cursor-pointer"
+              className="px-2.5 py-1 bg-white hover:bg-orange-50 border border-gray-300 rounded-full text-gray-700 cursor-pointer"
             >
               ¿Cómo agendo cita médica?
-            </button>
-            <button
-              onClick={() => handleSendMessage("¿Cuándo pagan el subsidio?")}
-              className="px-2.5 py-1 bg-white hover:bg-orange-50 border border-gray-300 hover:border-[#FF6600] rounded-full text-gray-700 cursor-pointer"
-            >
-              ¿Cuándo pagan el subsidio?
             </button>
             <button
               onClick={() =>
@@ -367,12 +269,12 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
                 value={inputPrompt}
                 onChange={(e) => setInputPrompt(e.target.value)}
                 disabled={loading}
-                className="flex-1 bg-gray-100 border border-gray-300 rounded-full px-4 py-2.5 text-xs text-[#383B3B] focus:outline-none focus:border-[#FF6600]"
+                className="flex-1 bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-xs text-[#383B3B] focus:outline-none focus:border-[#FF6600]"
               />
               <button
                 type="submit"
                 disabled={!inputPrompt.trim() || loading}
-                className="bg-[#FF6600] hover:bg-[#DB3C0B] disabled:opacity-50 text-white px-4 py-2.5 rounded-full font-bold text-xs cursor-pointer transition-colors"
+                className="bg-[#FF6600] hover:bg-[#DB3C0B] disabled:opacity-50 text-white px-4 py-2 rounded-full font-bold text-xs cursor-pointer transition-colors"
               >
                 Enviar
               </button>
