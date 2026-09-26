@@ -28,7 +28,7 @@ export const SecurityInspectorPanel: React.FC<SecurityInspectorPanelProps> = ({
       <div className="bg-[#070709] border border-zinc-800 p-8 h-full flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[460px] font-sans">
         <div className="w-6 h-6 border-2 border-zinc-700 border-t-white animate-spin mb-3" />
         <div className="text-xs font-mono text-zinc-300 font-semibold tracking-wider uppercase">
-          [INSPECCIONANDO PAYLOAD // REVERSE PROXY]
+          [INSPECCIONANDO PAYLOAD - REVERSE PROXY]
         </div>
         <p className="text-[11px] text-zinc-500 font-mono mt-1">
           Normalizando texto y contrastando reglas heurísticas...
@@ -60,7 +60,6 @@ export const SecurityInspectorPanel: React.FC<SecurityInspectorPanelProps> = ({
 
   return (
     <div className="bg-[#070709] border border-zinc-800 flex flex-col h-full w-full min-w-0 font-sans overflow-hidden">
-      {/* Inspector Header with Tab Switcher */}
       <div className="bg-[#0c0c0e] border-b border-zinc-800 px-4 py-2.5 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1 font-mono text-xs">
           <button
@@ -108,10 +107,8 @@ export const SecurityInspectorPanel: React.FC<SecurityInspectorPanelProps> = ({
         </div>
       </div>
 
-      {/* Tab 1: Analysis */}
       {activeTab === "analysis" && (
         <div className="p-5 space-y-5 flex-1 overflow-y-auto">
-          {/* Verdict Banner */}
           <div className="p-3.5 border flex items-center justify-between gap-3 bg-black border-zinc-800">
             <div className="flex items-center gap-3 min-w-0">
               <span
@@ -146,7 +143,6 @@ export const SecurityInspectorPanel: React.FC<SecurityInspectorPanelProps> = ({
             </div>
           </div>
 
-          {/* Risk Score Progress Bar */}
           <div className="space-y-1.5 font-mono">
             <div className="flex justify-between text-[11px] text-zinc-400">
               <span>Nivel de Riesgo Calculado</span>
@@ -162,7 +158,6 @@ export const SecurityInspectorPanel: React.FC<SecurityInspectorPanelProps> = ({
             </div>
           </div>
 
-          {/* Technical Summary */}
           {mitigation_reason && (
             <div className="p-3.5 bg-black border border-zinc-800 space-y-1">
               <span className="text-[10px] font-mono uppercase text-zinc-500 block font-semibold">
@@ -174,7 +169,6 @@ export const SecurityInspectorPanel: React.FC<SecurityInspectorPanelProps> = ({
             </div>
           )}
 
-          {/* Attack categories tags */}
           {categories_detected.length > 0 && (
             <div className="space-y-1.5 font-mono">
               <span className="text-[10px] uppercase text-zinc-500 block font-semibold">
@@ -195,7 +189,6 @@ export const SecurityInspectorPanel: React.FC<SecurityInspectorPanelProps> = ({
         </div>
       )}
 
-      {/* Tab 2: Matched Rules */}
       {activeTab === "rules" && (
         <div className="p-5 space-y-3 flex-1 overflow-y-auto font-mono">
           {triggered_rules.length === 0 ? (
@@ -226,7 +219,6 @@ export const SecurityInspectorPanel: React.FC<SecurityInspectorPanelProps> = ({
         </div>
       )}
 
-      {/* Tab 3: Raw JSON payload */}
       {activeTab === "json" && (
         <div className="p-4 flex-1 overflow-y-auto relative font-mono">
           <div className="flex justify-between items-center mb-2">

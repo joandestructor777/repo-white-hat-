@@ -1,5 +1,4 @@
 SEED_RULES = [
-    # 1. System Prompt Leakage
     {
         "name": "Fuga de Instrucciones del Sistema",
         "keyword": "ignore previous instructions",
@@ -66,8 +65,6 @@ SEED_RULES = [
         "description": "Intento de que el bot imprima textualmente las reglas y restricciones con las que fue configurado.",
         "is_active": True
     },
-
-    # 2. Credential & Secrets Harvesting
     {
         "name": "Robo de Clave de API",
         "keyword": "api_key",
@@ -112,8 +109,6 @@ SEED_RULES = [
         "description": "Extracción de credenciales de infraestructura en la nube.",
         "is_active": True
     },
-
-    # 3. Prompt Injection & Jailbreaks
     {
         "name": "Jailbreak Modo DAN (Do Anything Now)",
         "keyword": "dan mode",
@@ -147,8 +142,6 @@ SEED_RULES = [
         "description": "Ingeniería social orientada a convencer al chatbot de adoptar una personalidad ofensiva.",
         "is_active": True
     },
-
-    # 4. Data Exfiltration & SQL Injection
     {
         "name": "Inyección SQL Directa",
         "keyword": "select * from",

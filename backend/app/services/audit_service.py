@@ -2,6 +2,7 @@ import json
 from typing import List, Optional, Dict
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, func
+from app.core.config import settings
 from app.models.audit_log import SecurityAuditLog
 from app.schemas.audit_schema import SecurityAuditLogResponse
 from app.schemas.dashboard_schema import DashboardStatsResponse
@@ -19,7 +20,7 @@ class AuditService:
         threat_categories: List[str],
         response_text: str,
         mitigation_reason: Optional[str] = None,
-        client_ip: str = "127.0.0.1"
+        client_ip: str = settings.DEFAULT_CLIENT_IP
     ) -> SecurityAuditLog:
         log_entry = SecurityAuditLog(
             client_ip=client_ip,
@@ -52,7 +53,7 @@ class AuditService:
 
         return SecurityAuditLogResponse(
             id=log.id,
-            client_ip=log.client_ip or "127.0.0.1",
+            client_ip=log.client_ip or settings.DEFAULT_CLIENT_IP,
             prompt_text=log.prompt_text,
             blocked=log.blocked,
             action_taken=log.action_taken,
@@ -66,7 +67,7 @@ class AuditService:
         )
 
     @classmethod
-    def get_logs(cls, db: Session, limit: int = 50, blocked_only: bool = False) -> List[SecurityAuditLogResponse]:
+    def get_logs(cls, db: Session, limit: int = settings.DEFAULT_PAGE_LIMIT, blocked_only: bool = False) -> List[SecurityAuditLogResponse]:
         query = db.query(SecurityAuditLog)
         if blocked_only:
             query = query.filter(SecurityAuditLog.blocked == True)
@@ -85,7 +86,6 @@ class AuditService:
         avg_score_res = db.query(func.avg(SecurityAuditLog.risk_score)).scalar()
         avg_risk_score = round(float(avg_score_res or 0), 1)
 
-        # Category and severity distribution
         category_dist: Dict[str, int] = {}
         severity_dist: Dict[str, int] = {"CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0, "NONE": 0}
 
@@ -101,7 +101,7 @@ class AuditService:
             except:
                 pass
 
-        recent = cls.get_logs(db, limit=8)
+        recent = cls.get_logs(db, limit=settings.RECENT_EVENTS_LIMIT)
 
         return DashboardStatsResponse(
             total_scans=total_scans,

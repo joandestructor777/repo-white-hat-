@@ -1,20 +1,16 @@
 import re
 import unicodedata
-from typing import List, Tuple
+from typing import List
 from app.models.rule import SecurityRule
 from app.schemas.assistant_schema import DetectedKeywordMatch, SecurityInspectionResult
+from app.core.config import settings
 
 def normalize_text(text: str) -> str:
-    """Normaliza texto removiendo acentos y convirtiendo a minúsculas para evitar bypass con tildes."""
     text = text.lower()
-    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
-    return text
+    return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
 
 def deobfuscate_spacing(text: str) -> str:
-    """Detecta técnicas de evasión donde separan letras por espacios (ej: 's y s t e m')"""
-    # Si hay muchas letras individuales separadas por espacios, comprime
-    cleaned = re.sub(r'(?<=\b\w)\s(?=\w\b)', '', text)
-    return cleaned
+    return re.sub(r'(?<=\b\w)\s(?=\w\b)', '', text)
 
 class SecurityEngine:
     SEVERITY_WEIGHTS = {
@@ -69,7 +65,6 @@ class SecurityEngine:
                 except re.error:
                     pass
             elif rule.pattern_type == "FUZZY":
-                # Resistencia a variantes de escritura
                 kw_condensed = target_kw.replace(" ", "")
                 if kw_condensed in norm_prompt.replace(" ", ""):
                     matched = True
@@ -86,7 +81,6 @@ class SecurityEngine:
                 triggered.append(match_entry)
                 categories_set.add(rule.category)
 
-                # Evaluar severidad máxima
                 if highest_severity == "NONE":
                     highest_severity = rule.severity
                 else:
@@ -98,19 +92,16 @@ class SecurityEngine:
                 if rule.action == "BLOCK":
                     should_block = True
 
-        # Calcular puntaje de riesgo consolidado (0 a 100)
         if not triggered:
             risk_score = 0
             is_safe = True
             mitigation_reason = None
         else:
             max_rule_score = max(t.risk_score for t in triggered)
-            # Factor de acumulación si coinciden múltiples reglas
             accumulation = min(20, (len(triggered) - 1) * 5)
             risk_score = min(100, max_rule_score + accumulation)
             
-            # Si el riesgo supera 70 o la severidad es HIGH/CRITICAL, forzar bloqueo
-            if risk_score >= 70 or highest_severity in ["HIGH", "CRITICAL"]:
+            if risk_score >= settings.CRITICAL_RISK_THRESHOLD or highest_severity in ["HIGH", "CRITICAL"]:
                 should_block = True
             
             is_safe = not should_block
@@ -120,7 +111,7 @@ class SecurityEngine:
                 rule_names += f" y {len(triggered) - 3} más"
 
             if should_block:
-                mitigation_reason = f"Interceptado por CyberGuardrail: Solicitud potencialmente maliciosa clasificada como {highest_severity}. Reglas disparadas: {rule_names}."
+                mitigation_reason = f"Interceptado por JoanVector: Solicitud potencialmente maliciosa clasificada como {highest_severity}. Reglas disparadas: {rule_names}."
             else:
                 mitigation_reason = f"Alerta preventiva: Se detectaron patrones sospechosos ({highest_severity}), pero la solicitud fue permitida con registro en auditoría."
 

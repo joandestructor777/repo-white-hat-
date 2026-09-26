@@ -37,13 +37,12 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
 
   return (
     <div className="space-y-6 w-full min-w-0 font-sans">
-      {/* Header Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-[#070709] border border-zinc-800 w-full min-w-0">
         <div className="min-w-0">
           <div className="flex items-center gap-2 mb-1.5">
             <span className="w-2 h-2 bg-emerald-500 shrink-0" />
             <span className="text-[11px] font-mono uppercase text-zinc-400 tracking-wider">
-              FORENSIC AUDIT TRAIL // LOGS
+              FORENSIC AUDIT TRAIL - LOGS
             </span>
           </div>
           <h2 className="text-lg font-bold text-white tracking-tight font-mono">
@@ -75,7 +74,6 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
         </div>
       </div>
 
-      {/* Search Bar */}
       <div className="p-4 bg-[#09090b] border border-zinc-800 w-full min-w-0">
         <input
           type="text"
@@ -86,7 +84,6 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
         />
       </div>
 
-      {/* Table */}
       <div className="border border-zinc-800 bg-[#070709] w-full min-w-0">
         {loading && logs.length === 0 ? (
           <div className="p-16 text-center text-zinc-500 text-xs font-mono">
@@ -113,12 +110,10 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
               <tbody className="divide-y divide-zinc-800/60 font-mono">
                 {filteredLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-zinc-900/40 transition-colors">
-                    {/* Date */}
                     <td className="py-3 px-5 whitespace-nowrap text-zinc-500 text-[11px]">
                       {formatDateTime(log.created_at)}
                     </td>
 
-                    {/* Status */}
                     <td className="py-3 px-5 whitespace-nowrap">
                       {log.blocked ? (
                         <span className="font-bold text-[11px] text-red-400 bg-red-950/40 px-2 py-0.5 border border-red-800">
@@ -131,19 +126,16 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
                       )}
                     </td>
 
-                    {/* Client IP */}
                     <td className="py-3 px-5 whitespace-nowrap text-zinc-400 text-xs">
                       {log.client_ip}
                     </td>
 
-                    {/* Prompt Preview */}
                     <td className="py-3 px-5 max-w-[240px]">
                       <div className="truncate text-xs text-zinc-200" title={log.prompt_text}>
                         {log.prompt_text}
                       </div>
                     </td>
 
-                    {/* Detected Keywords */}
                     <td className="py-3 px-5 text-xs max-w-[200px]">
                       {log.detected_keywords && log.detected_keywords.length > 0 ? (
                         <div
@@ -157,7 +149,6 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
                       )}
                     </td>
 
-                    {/* Severity & Score */}
                     <td className="py-3 px-5 whitespace-nowrap">
                       <span
                         className={`px-2 py-0.5 text-[11px] font-bold border ${getSeverityStyle(
@@ -168,7 +159,6 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
                       </span>
                     </td>
 
-                    {/* Inspect Button */}
                     <td className="py-3 px-5 whitespace-nowrap text-right">
                       <button
                         onClick={() => setSelectedLog(log)}
@@ -190,16 +180,14 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
         </div>
       </div>
 
-      {/* Incident Detail Modal */}
       {selectedLog && (
         <Modal
           isOpen={!!selectedLog}
           onClose={() => setSelectedLog(null)}
-          title={`Inspección Forense // Evento #${selectedLog.id}`}
+          title={`Inspección Forense - Evento #${selectedLog.id}`}
           maxWidth="lg"
         >
           <div className="space-y-4 font-mono text-xs w-full min-w-0">
-            {/* Metadata Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-black border border-zinc-800">
               <div>
                 <span className="text-zinc-500 block text-[10px] uppercase font-semibold">Dictamen</span>
@@ -223,7 +211,6 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
               </div>
             </div>
 
-            {/* Prompt Original */}
             <div className="w-full min-w-0 space-y-1">
               <span className="text-zinc-400 font-semibold block uppercase tracking-wider text-[11px]">
                 PROMPT ORIGINAL INSPECCIONADO:
@@ -233,7 +220,6 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
               </div>
             </div>
 
-            {/* Detected Keywords */}
             {selectedLog.detected_keywords && selectedLog.detected_keywords.length > 0 && (
               <div className="w-full min-w-0 space-y-1">
                 <span className="text-zinc-400 font-semibold block uppercase tracking-wider text-[11px]">
@@ -252,7 +238,6 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
               </div>
             )}
 
-            {/* Mitigation Reason */}
             {selectedLog.mitigation_reason && (
               <div className="w-full min-w-0 space-y-1">
                 <span className="text-zinc-400 font-semibold block uppercase tracking-wider text-[11px]">
@@ -264,7 +249,6 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
               </div>
             )}
 
-            {/* Response Delivered */}
             <div className="w-full min-w-0 space-y-1">
               <span className="text-zinc-400 font-semibold block uppercase tracking-wider text-[11px]">
                 RESPUESTA ENTREGADA AL CLIENTE:

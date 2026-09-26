@@ -3,6 +3,7 @@ import { apiClient } from "../../../shared/api/axiosClient";
 import { AuditLog } from "../../audit-logs/services/auditService";
 import { Button } from "../../../components/ui/Button";
 import { formatDateTime, getSeverityStyle, getRiskScoreColor } from "../../../shared/utils/formatters";
+import { APP_BRAND_NAME } from "../../../constants/security.constants";
 
 interface DashboardStats {
   total_scans: number;
@@ -46,13 +47,12 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
 
   return (
     <div className="space-y-6 w-full min-w-0 font-sans">
-      {/* Top Banner (SOC / Terminal style) */}
       <div className="p-6 bg-[#070709] border border-zinc-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 w-full min-w-0">
         <div className="space-y-2 min-w-0">
           <div className="flex items-center gap-2 min-w-0">
             <span className="w-2 h-2 bg-emerald-500 shrink-0" />
             <span className="text-[11px] font-mono font-bold tracking-widest uppercase text-zinc-400">
-              JoanVector // Threat Intelligence Telemetry
+              {APP_BRAND_NAME} - Threat Intelligence Telemetry
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-mono truncate">
@@ -73,9 +73,7 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full min-w-0">
-        {/* Card 1: Total Scans */}
         <div className="p-5 bg-[#09090b] border border-zinc-800/90 space-y-2.5 min-w-0">
           <div className="flex items-center justify-between text-zinc-400 text-xs font-mono uppercase">
             <span>Peticiones Escaneadas</span>
@@ -89,7 +87,6 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
           </div>
         </div>
 
-        {/* Card 2: Threats Blocked */}
         <div className="p-5 bg-[#09090b] border border-zinc-800/90 space-y-2.5 min-w-0">
           <div className="flex items-center justify-between text-zinc-400 text-xs font-mono uppercase">
             <span>Amenazas Mitigadas</span>
@@ -103,7 +100,6 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
           </div>
         </div>
 
-        {/* Card 3: Avg Risk Score */}
         <div className="p-5 bg-[#09090b] border border-zinc-800/90 space-y-2.5 min-w-0">
           <div className="flex items-center justify-between text-zinc-400 text-xs font-mono uppercase">
             <span>Riesgo Heurístico Promedio</span>
@@ -117,7 +113,6 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
           </div>
         </div>
 
-        {/* Card 4: Allowed Traffic */}
         <div className="p-5 bg-[#09090b] border border-zinc-800/90 space-y-2.5 min-w-0">
           <div className="flex items-center justify-between text-zinc-400 text-xs font-mono uppercase">
             <span>Tráfico Legítimo</span>
@@ -132,9 +127,7 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
         </div>
       </div>
 
-      {/* Middle Grid: Severity Distribution & Category Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 w-full min-w-0">
-        {/* Severity Bars */}
         <div className="p-5 bg-[#070709] border border-zinc-800 space-y-4 w-full min-w-0 overflow-hidden">
           <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-200 font-mono truncate">
@@ -170,7 +163,6 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
           </div>
         </div>
 
-        {/* Categories Breakdown */}
         <div className="p-5 bg-[#070709] border border-zinc-800 space-y-4 w-full min-w-0 overflow-hidden">
           <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-200 font-mono truncate">
@@ -206,7 +198,6 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
         </div>
       </div>
 
-      {/* Recent Activity Table Preview */}
       <div className="p-5 bg-[#070709] border border-zinc-800 space-y-3 w-full min-w-0 overflow-hidden">
         <div className="flex items-center justify-between pb-2 border-b border-zinc-800">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-200 font-mono truncate">

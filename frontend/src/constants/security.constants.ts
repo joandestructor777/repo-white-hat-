@@ -1,3 +1,15 @@
+export const DEFAULT_CLIENT_IP = "192.168.1.105";
+export const DEFAULT_OPERATOR_NAME = "Joan";
+export const DEFAULT_OPERATOR_ROLE = "SecOps Lead / Red Team Architect";
+export const APP_BRAND_NAME = "JoanVector";
+export const APP_SUBTITLE = "AI Cybersecurity Guardrail";
+export const MAX_AVATAR_SIZE_BYTES = 5 * 1024 * 1024;
+export const DEFAULT_PROFILE_STORAGE_KEY = "joanvector_user_profile_v1";
+export const ACTIVE_TAB_STORAGE_KEY = "joanvector_active_tab";
+
+export const DEFAULT_CHAT_WELCOME = "Hola, soy el Asistente Virtual protegido por JoanVector. ¿En qué puedo orientarte hoy respecto a nuestra plataforma?";
+export const COMPENHACK_WELCOME = "¡Hola! Bienvenido a CompenHack. Soy tu asistente virtual de bienestar integral. ¿En qué puedo orientarte hoy sobre tus citas médicas o subsidio familiar?";
+
 export const SECURITY_CATEGORIES = [
   { value: "SYSTEM_PROMPT_LEAK", label: "Fuga de System Prompt", badge: "border-purple-500/40 text-purple-300" },
   { value: "CREDENTIAL_HARVESTING", label: "Extracción de Credenciales / API Keys", badge: "border-red-500/40 text-red-300" },

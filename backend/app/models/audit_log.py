@@ -9,11 +9,11 @@ class SecurityAuditLog(Base):
     client_ip = Column(String(50), default="127.0.0.1")
     prompt_text = Column(Text, nullable=False)
     blocked = Column(Boolean, default=False)
-    action_taken = Column(String(50), default="ALLOWED")  # ALLOWED, BLOCKED, SANITIZED, FLAGGED
+    action_taken = Column(String(50), default="ALLOWED")
     risk_score = Column(Integer, default=0)
-    highest_severity = Column(String(50), default="NONE")  # NONE, LOW, MEDIUM, HIGH, CRITICAL
-    detected_keywords = Column(Text, default="[]")  # JSON string of detected words/rules
-    threat_categories = Column(Text, default="[]")  # JSON string of triggered categories
+    highest_severity = Column(String(50), default="NONE")
+    detected_keywords = Column(Text, default="[]")
+    threat_categories = Column(Text, default="[]")
     response_text = Column(Text, nullable=True)
     mitigation_reason = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)

@@ -1,6 +1,12 @@
 import React from "react";
 import { APP_ROUTES, AppTab } from "../../constants/routes.constants";
 import { UserProfile } from "../../shared/hooks/useUserProfile";
+import {
+  APP_BRAND_NAME,
+  APP_SUBTITLE,
+  DEFAULT_OPERATOR_NAME,
+  DEFAULT_OPERATOR_ROLE,
+} from "../../constants/security.constants";
 
 interface SidebarProps {
   currentTab: AppTab;
@@ -57,14 +63,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside className="w-72 shrink-0 bg-[#070709] border-r border-zinc-800 flex flex-col justify-between min-h-screen select-none font-sans">
-      {/* Brand Header */}
       <div>
         <div className="p-6 border-b border-zinc-800/80">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2.5">
               <span className="w-2.5 h-2.5 bg-emerald-500 rounded-none inline-block shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
               <span className="font-mono text-base font-bold tracking-wider text-white uppercase">
-                JoanVector
+                {APP_BRAND_NAME}
               </span>
             </div>
             <span className="font-mono text-[10px] tracking-widest px-1.5 py-0.5 border border-zinc-700 text-zinc-400">
@@ -72,11 +77,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </span>
           </div>
           <div className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
-            AI Cybersecurity Guardrail
+            {APP_SUBTITLE}
           </div>
         </div>
 
-        {/* Gateway Telemetry Box */}
         <div className="px-4 py-3 mx-4 my-4 bg-black/60 border border-zinc-800/90 font-mono text-[11px]">
           <div className="flex items-center justify-between text-zinc-400 mb-1.5">
             <span className="text-[10px] uppercase text-zinc-500 tracking-wider">GATEWAY STATUS</span>
@@ -110,7 +114,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="px-3 space-y-1">
           <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest text-zinc-600">
             Navegación del Sistema
@@ -154,7 +157,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Operator Profile & Footer */}
       <div className="p-4 border-t border-zinc-800/80 bg-black/40">
         <div
           onClick={onOpenProfile}
@@ -175,14 +177,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-zinc-200 truncate">
-                {profile.name || "Joan"}
+                {profile.name || DEFAULT_OPERATOR_NAME}
               </span>
               <span className="font-mono text-[9px] text-emerald-400 uppercase">
                 ACTIVE
               </span>
             </div>
             <div className="text-[10px] font-mono text-zinc-500 truncate">
-              {profile.role || "White Hat / SOC Lead"}
+              {profile.role || DEFAULT_OPERATOR_ROLE}
             </div>
           </div>
         </div>

@@ -1,33 +1,35 @@
 import { useState, useEffect } from "react";
+import {
+  DEFAULT_OPERATOR_NAME,
+  DEFAULT_OPERATOR_ROLE,
+  MAX_AVATAR_SIZE_BYTES,
+  DEFAULT_PROFILE_STORAGE_KEY,
+} from "../../constants/security.constants";
 
 export interface UserProfile {
   name: string;
   role: string;
-  avatarUrl: string; // Base64 data URL o vacío si no ha subido foto
+  avatarUrl: string;
 }
-
-const STORAGE_KEY = "joanvector_user_profile_v1";
 
 export function useUserProfile() {
   const [profile, setProfile] = useState<UserProfile>(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(DEFAULT_PROFILE_STORAGE_KEY);
       if (saved) {
         return JSON.parse(saved);
       }
-    } catch {
-      // fallback
-    }
+    } catch {}
     return {
-      name: "Joan",
-      role: "White Hat / SOC Lead",
+      name: DEFAULT_OPERATOR_NAME,
+      role: DEFAULT_OPERATOR_ROLE,
       avatarUrl: "",
     };
   });
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+      localStorage.setItem(DEFAULT_PROFILE_STORAGE_KEY, JSON.stringify(profile));
     } catch (e) {
       console.warn("No se pudo guardar el perfil en localStorage", e);
     }
@@ -51,7 +53,7 @@ export function useUserProfile() {
         reject(new Error("El archivo seleccionado debe ser una imagen válida (.png, .jpg, .webp, .jpeg)."));
         return;
       }
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > MAX_AVATAR_SIZE_BYTES) {
         reject(new Error("La imagen no debe superar los 5 MB de tamaño."));
         return;
       }

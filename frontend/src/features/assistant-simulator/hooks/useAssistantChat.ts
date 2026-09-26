@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { assistantService, AssistantChatResponse, SecurityInspectionResult } from "../services/assistantService";
+import { DEFAULT_CHAT_WELCOME } from "../../../constants/security.constants";
 
 export interface ChatMessage {
   id: string;
@@ -15,7 +16,7 @@ export function useAssistantChat() {
     {
       id: "welcome-1",
       sender: "assistant",
-      text: "Hola, soy el Asistente Virtual de NexaSentry. ¿En qué puedo asistirte hoy respecto a nuestra plataforma?",
+      text: DEFAULT_CHAT_WELCOME,
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -64,7 +65,7 @@ export function useAssistantChat() {
       {
         id: "welcome-1",
         sender: "assistant",
-        text: "Hola, soy el Asistente Virtual de NexaSentry. ¿En qué puedo asistirte hoy respecto a nuestra plataforma?",
+        text: DEFAULT_CHAT_WELCOME,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       },
     ]);

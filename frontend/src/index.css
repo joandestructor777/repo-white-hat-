@@ -15,7 +15,6 @@
   }
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -31,7 +30,6 @@
   background: #3f3f46;
 }
 
-/* Monospace fonts for cyber details */
 .font-mono-cyber {
   font-family: "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }

@@ -1,7 +1,7 @@
 @echo off
-title AI Assistant Security Guardrail - Lanzador General
+title JoanVector - AI Security Guardrail Lanzador
 echo ======================================================================
-echo       AI ASSISTANT CYBERSECURITY GUARDRAIL - LANZADOR GLOBAL
+echo       JOANVECTOR - AI ASSISTANT CYBERSECURITY GUARDRAIL
 echo ======================================================================
 echo.
 echo Iniciando el ecosistema completo (FastAPI Backend + Vite Frontend)...
@@ -9,7 +9,7 @@ echo.
 
 cd /d "%~dp0"
 
-echo [1/2] Levantando Backend (FastAPI + PostgreSQL)...
+echo [1/2] Levantando Backend (FastAPI + SQLite/PostgreSQL)...
 start "Backend - FastAPI SOC Engine" cmd /k "cd /d %~dp0backend && call run_backend.bat"
 
 timeout /t 3 /nobreak >nul

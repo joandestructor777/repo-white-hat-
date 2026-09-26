@@ -1,4 +1,5 @@
 import { apiClient } from "../../../shared/api/axiosClient";
+import { DEFAULT_CLIENT_IP } from "../../../constants/security.constants";
 
 export interface DetectedKeywordMatch {
   keyword: string;
@@ -28,7 +29,7 @@ export interface AssistantChatResponse {
 }
 
 export const assistantService = {
-  async sendMessage(message: string, clientIp: string = "192.168.1.105"): Promise<AssistantChatResponse> {
+  async sendMessage(message: string, clientIp: string = DEFAULT_CLIENT_IP): Promise<AssistantChatResponse> {
     const response = await apiClient.post<AssistantChatResponse>("/assistant/chat", {
       message,
       client_ip: clientIp,

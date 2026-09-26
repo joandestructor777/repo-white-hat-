@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { apiClient } from "../../../shared/api/axiosClient";
+import { DEFAULT_CLIENT_IP, COMPENHACK_WELCOME } from "../../../constants/security.constants";
 
 interface Message {
   id: string;
@@ -19,7 +20,7 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
     {
       id: "1",
       sender: "bot",
-      text: "¡Hola! Bienvenido a CompenHack. Soy tu asistente virtual de bienestar integral. ¿En qué puedo orientarte hoy sobre tus citas médicas o subsidio familiar?",
+      text: COMPENHACK_WELCOME,
       timestamp: "Ahora",
     },
   ]);
@@ -50,7 +51,7 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
     try {
       const res = await apiClient.post("/assistant/chat", {
         message: promptToSend,
-        client_ip: "192.168.1.105",
+        client_ip: DEFAULT_CLIENT_IP,
       });
 
       const botMsg: Message = {
@@ -85,11 +86,10 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
 
   return (
     <div className="min-h-screen bg-[#F7F7F7] text-[#383B3B] font-sans relative selection:bg-[#FF6600] selection:text-white flex flex-col justify-between">
-      {/* Top Banner to switch back to SOC Console */}
       <div className="bg-[#111114] text-zinc-300 text-xs py-2 px-6 flex items-center justify-between border-b border-zinc-800">
         <div className="flex items-center gap-2 font-mono">
           <span className="w-2 h-2 bg-emerald-400 inline-block animate-pulse"></span>
-          <span className="text-[11px] text-zinc-400">SIMULACIÓN WEB EMPRESA // PORTAL COMPENHACK</span>
+          <span className="text-[11px] text-zinc-400">SIMULACIÓN WEB EMPRESA - PORTAL COMPENHACK</span>
         </div>
         <button
           onClick={onBackToSOC}
@@ -99,10 +99,8 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
         </button>
       </div>
 
-      {/* Clean, minimalist Compensar Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          {/* Logo CompenHack */}
           <div className="flex items-center gap-3">
             <div className="relative w-7 h-7 flex items-center justify-center">
               <div className="w-2 h-2 rounded-full bg-[#FF6600] absolute top-0 left-2.5"></div>
@@ -116,7 +114,6 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
             </span>
           </div>
 
-          {/* Simple right action */}
           <button
             onClick={() => setIsChatOpen(true)}
             className="bg-[#FF6600] hover:bg-[#DB3C0B] text-white px-5 py-2 rounded-full font-bold text-xs tracking-wide transition-colors cursor-pointer"
@@ -126,7 +123,6 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
         </div>
       </header>
 
-      {/* Clean Main Hero Body (Sin sobrecarga de tarjetas) */}
       <main className="max-w-4xl mx-auto px-6 py-20 flex-1 flex flex-col items-center justify-center text-center">
         <div className="space-y-6 max-w-2xl">
           <span className="inline-block px-3.5 py-1 rounded-full bg-[#FFE5CC] text-[#FF6600] font-bold text-xs uppercase tracking-wider">
@@ -141,7 +137,6 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
             Consulta tus citas médicas, subsidio familiar y programas recreativos de forma rápida.
           </p>
 
-          {/* Mensajito solicitado */}
           <div className="inline-block px-6 py-3 bg-white border border-orange-200 shadow-sm text-sm font-bold text-[#FF6600] rounded-xl">
             ¿Estás listo? :)
           </div>
@@ -157,7 +152,6 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
         </div>
       </main>
 
-      {/* Minimal Footer */}
       <footer className="border-t border-gray-200 bg-white py-6 text-center text-xs text-gray-500">
         <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>CompenHack • Caja de Compensación Familiar</span>
@@ -165,7 +159,6 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
         </div>
       </footer>
 
-      {/* Floating Chat Trigger Button in Bottom Right Corner */}
       {!isChatOpen && (
         <button
           onClick={() => setIsChatOpen(true)}
@@ -178,10 +171,8 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
         </button>
       )}
 
-      {/* The Floating Customer Chat Widget */}
       {isChatOpen && (
         <div className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] h-[520px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in fade-in">
-          {/* Chat Header in Compensar Orange */}
           <div className="bg-[#FF6600] text-white p-4 flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">
@@ -205,7 +196,6 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
             </button>
           </div>
 
-          {/* Messages Body */}
           <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#F9FAFB] text-xs">
             {messages.map((m) => {
               const isUser = m.sender === "user";
@@ -241,7 +231,6 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick Attack / Query Suggestion Chips */}
           <div className="p-2.5 bg-gray-50 border-t border-gray-200 flex flex-wrap gap-1.5 text-[10px]">
             <button
               onClick={() => handleSendMessage("¿Cómo agendo una cita médica?")}
@@ -259,7 +248,6 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
             </button>
           </div>
 
-          {/* Chat Input */}
           <div className="p-3 bg-white border-t border-gray-200">
             <form
               onSubmit={(e) => {

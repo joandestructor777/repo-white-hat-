@@ -1,7 +1,7 @@
 @echo off
-title Backend - AI Assistant Security Guardrail (FastAPI)
+title Backend - JoanVector (FastAPI)
 echo ========================================================
-echo   AI Assistant Security Guardrail - FastAPI + PostgreSQL
+echo   JoanVector - FastAPI + SQLite/PostgreSQL Guardrail
 echo ========================================================
 echo Iniciando servidor backend en http://localhost:8000 ...
 cd /d "%~dp0"

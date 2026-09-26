@@ -11,11 +11,12 @@ import { useUserProfile } from "./shared/hooks/useUserProfile";
 import { UserProfileModal } from "./components/layout/UserProfileModal";
 import { APP_ROUTES, AppTab } from "./constants/routes.constants";
 import { apiClient } from "./shared/api/axiosClient";
+import { ACTIVE_TAB_STORAGE_KEY } from "./constants/security.constants";
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<AppTab>(() => {
     try {
-      const saved = sessionStorage.getItem("joanvector_active_tab");
+      const saved = sessionStorage.getItem(ACTIVE_TAB_STORAGE_KEY);
       if (saved && Object.values(APP_ROUTES).includes(saved as any)) {
         return saved as AppTab;
       }
@@ -27,14 +28,12 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     try {
-      sessionStorage.setItem("joanvector_active_tab", currentTab);
+      sessionStorage.setItem(ACTIVE_TAB_STORAGE_KEY, currentTab);
     } catch {}
   }, [currentTab]);
 
-  // User Profile with Avatar & Image Upload
   const { profile, updateProfile, uploadCustomImage, removeAvatar } = useUserProfile();
 
-  // Features hooks
   const {
     rules,
     loading: rulesLoading,
@@ -52,7 +51,6 @@ export const App: React.FC = () => {
     refresh: refreshLogs,
   } = useAuditLogs();
 
-  // Health check polling to show live FastAPI connectivity
   useEffect(() => {
     const checkHealth = async () => {
       try {
@@ -68,7 +66,6 @@ export const App: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Full-page view for the company client portal simulation (CompenHack)
   if (currentTab === APP_ROUTES.COMPENHACK) {
     return (
       <CompenHackPortal
@@ -79,7 +76,6 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#050507] text-[#f4f4f5] flex font-sans selection:bg-white selection:text-black">
-      {/* Sidebar Navigation */}
       <Sidebar
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
@@ -88,7 +84,6 @@ export const App: React.FC = () => {
         onOpenProfile={() => setIsProfileModalOpen(true)}
       />
 
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
         <header className="border-b border-zinc-800/80 bg-[#070709]/80 backdrop-blur-md px-6 py-3.5 flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-3">
@@ -111,7 +106,6 @@ export const App: React.FC = () => {
           </div>
         </header>
 
-        {/* Feature Container */}
         <main className="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-8 py-8 min-w-0">
           {currentTab === APP_ROUTES.DASHBOARD && (
             <ThreatOverview
@@ -149,7 +143,6 @@ export const App: React.FC = () => {
           )}
         </main>
 
-        {/* Minimal Footer */}
         <footer className="border-t border-zinc-900 bg-[#070709] py-4 px-6 text-center text-xs text-zinc-500 font-mono mt-auto">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <span>JoanVector • Enterprise Cybersecurity Architecture</span>
@@ -158,7 +151,6 @@ export const App: React.FC = () => {
         </footer>
       </div>
 
-      {/* Quick profile modal */}
       <UserProfileModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}

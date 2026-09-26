@@ -1,5 +1,4 @@
 import random
-from typing import Tuple
 from sqlalchemy.orm import Session
 from app.models.rule import SecurityRule
 from app.core.security_engine import SecurityEngine
@@ -47,13 +46,9 @@ class AssistantService:
         prompt: str,
         client_ip: str = "127.0.0.1"
     ) -> AssistantChatResponse:
-        # 1. Obtener todas las reglas de seguridad activas desde la base de datos
         active_rules = db.query(SecurityRule).filter(SecurityRule.is_active == True).all()
-
-        # 2. Ejecutar inspección con el motor de ciberseguridad
         security_eval: SecurityInspectionResult = SecurityEngine.inspect(prompt, active_rules)
 
-        # 3. Determinar respuesta y acción tomada
         if security_eval.blocked:
             action_taken = "BLOCKED"
             reply = (
@@ -72,7 +67,6 @@ class AssistantService:
             action_taken = "ALLOWED"
             reply = cls._generate_safe_reply(prompt)
 
-        # 4. Registrar en la base de datos (Auditoría)
         kws = [r.keyword for r in security_eval.triggered_rules]
         cats = security_eval.categories_detected
 

@@ -1,7 +1,7 @@
 @echo off
-title Frontend - AI Assistant Security Guardrail (React + Vite)
+title Frontend - JoanVector (React + Vite)
 echo ========================================================
-echo   AI Assistant Security Guardrail - Frontend UI (SOC)
+echo   JoanVector - SOC Console & Assistant Portal
 echo ========================================================
 echo Iniciando servidor de desarrollo Vite en http://localhost:5173 ...
 cd /d "%~dp0"

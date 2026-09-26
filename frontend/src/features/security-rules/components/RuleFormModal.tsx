@@ -230,7 +230,7 @@ export const RuleFormModal: React.FC<RuleFormModalProps> = ({
             Cancelar
           </Button>
           <Button variant="primary" type="submit" loading={submitting}>
-            {initialData ? "Actualizar Regla" : "Guardar en PostgreSQL"}
+            {initialData ? "Actualizar Regla" : "Guardar Regla"}
           </Button>
         </div>
       </form>

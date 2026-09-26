@@ -67,13 +67,12 @@ export const RuleTable: React.FC<RuleTableProps> = ({
 
   return (
     <div className="space-y-6 w-full min-w-0 font-sans">
-      {/* Header & Actions Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-[#070709] border border-zinc-800 w-full min-w-0">
         <div className="min-w-0">
           <div className="flex items-center gap-2 mb-1.5">
             <span className="w-2 h-2 bg-emerald-500 shrink-0" />
             <span className="text-[11px] font-mono uppercase text-zinc-400 tracking-wider">
-              DEFENSE POLICY MATRIX // CRUD
+              DEFENSE POLICY MATRIX - CRUD
             </span>
           </div>
           <h2 className="text-lg font-bold text-white tracking-tight font-mono">
@@ -104,7 +103,6 @@ export const RuleTable: React.FC<RuleTableProps> = ({
         </div>
       </div>
 
-      {/* Filters Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-[#09090b] border border-zinc-800 w-full min-w-0">
         <div className="w-full min-w-0">
           <input
@@ -146,7 +144,6 @@ export const RuleTable: React.FC<RuleTableProps> = ({
         </div>
       </div>
 
-      {/* Table Content */}
       <div className="border border-zinc-800 bg-[#070709] w-full min-w-0">
         {loading && rules.length === 0 ? (
           <div className="p-16 text-center text-zinc-500 text-xs font-mono">
@@ -173,7 +170,6 @@ export const RuleTable: React.FC<RuleTableProps> = ({
               <tbody className="divide-y divide-zinc-800/60 font-mono">
                 {filteredRules.map((rule) => (
                   <tr key={rule.id} className="hover:bg-zinc-900/40 transition-colors">
-                    {/* Status */}
                     <td className="py-3 px-5 whitespace-nowrap">
                       <button
                         onClick={() => onToggleActive(rule.id, rule.is_active)}
@@ -188,7 +184,6 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                       </button>
                     </td>
 
-                    {/* Name & Description */}
                     <td className="py-3 px-5 max-w-[240px] min-w-[150px]">
                       <div className="font-semibold text-white tracking-tight truncate">
                         {rule.name}
@@ -203,7 +198,6 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                       )}
                     </td>
 
-                    {/* Keyword / Pattern */}
                     <td className="py-3 px-5 max-w-[240px]">
                       <span className="px-2 py-0.5 bg-black border border-zinc-700 text-zinc-200 text-xs font-semibold break-all inline-block">
                         {rule.keyword}
@@ -213,14 +207,12 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                       </span>
                     </td>
 
-                    {/* Category */}
                     <td className="py-3 px-5 whitespace-nowrap">
                       <span className="text-xs text-zinc-400 font-medium">
                         {rule.category}
                       </span>
                     </td>
 
-                    {/* Severity */}
                     <td className="py-3 px-5 whitespace-nowrap">
                       <span
                         className={`px-2 py-0.5 text-[11px] font-bold border ${getSeverityStyle(
@@ -231,14 +223,12 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                       </span>
                     </td>
 
-                    {/* Action */}
                     <td className="py-3 px-5 whitespace-nowrap">
                       <Badge variant={rule.action === "BLOCK" ? "danger" : "warning"}>
                         {rule.action}
                       </Badge>
                     </td>
 
-                    {/* Actions */}
                     <td className="py-3 px-5 whitespace-nowrap text-right space-x-2">
                       <button
                         onClick={() => handleOpenEdit(rule)}
@@ -268,11 +258,10 @@ export const RuleTable: React.FC<RuleTableProps> = ({
 
         <div className="px-5 py-3 bg-[#0c0c0e] border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-mono flex-wrap gap-2">
           <span>Total de políticas registradas: {rules.length} (Filtradas: {filteredRules.length})</span>
-          <span className="text-[11px]">INTERCEPTOR PERIMETRAL // ON</span>
+          <span className="text-[11px]">INTERCEPTOR PERIMETRAL - ON</span>
         </div>
       </div>
 
-      {/* Modal Dialog */}
       <RuleFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

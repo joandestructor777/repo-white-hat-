@@ -4,6 +4,7 @@ import { AttackPayloadSelector } from "./AttackPayloadSelector";
 import { SecurityInspectorPanel } from "./SecurityInspectorPanel";
 import { Button } from "../../../components/ui/Button";
 import { UserProfile } from "../../../shared/hooks/useUserProfile";
+import { DEFAULT_CLIENT_IP, DEFAULT_OPERATOR_NAME } from "../../../constants/security.constants";
 
 interface WebsiteAssistantViewProps {
   userProfile?: UserProfile;
@@ -55,14 +56,10 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
 
   return (
     <div className="space-y-6 w-full min-w-0 font-sans">
-      {/* Top Attack Scenarios Drawer */}
       <AttackPayloadSelector onSelectPayload={handleSelectPayload} disabled={loading} />
 
-      {/* Main Console: Live Web Client vs Inspector */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full min-w-0">
-        {/* Left Column: Client Session Simulator (7 cols) */}
         <div className="lg:col-span-7 bg-[#070709] border border-zinc-800 flex flex-col w-full min-w-0 overflow-hidden">
-          {/* Real API Gateway Route Bar */}
           <div className="bg-[#0c0c0e] border-b border-zinc-800 px-4 py-2.5 flex items-center justify-between gap-3 text-xs font-mono">
             <div className="flex items-center gap-2 min-w-0">
               <span className="px-1.5 py-0.5 bg-emerald-950/80 border border-emerald-800 text-emerald-400 font-bold text-[10px]">
@@ -73,12 +70,11 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
               </span>
             </div>
             <div className="flex items-center gap-3 text-zinc-500 text-[11px] shrink-0">
-              <span className="hidden sm:inline">CLIENT_IP: 192.168.1.105</span>
+              <span className="hidden sm:inline">CLIENT_IP: {DEFAULT_CLIENT_IP}</span>
               <span className="text-zinc-400 font-semibold">{latencyMs}ms</span>
             </div>
           </div>
 
-          {/* Assistant Client Header */}
           <div className="px-5 py-3 bg-[#09090b] border-b border-zinc-800 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-6 h-6 bg-black border border-zinc-700 flex items-center justify-center font-mono text-[10px] text-zinc-300 font-bold shrink-0">
@@ -86,7 +82,7 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
               </div>
               <div className="min-w-0">
                 <div className="text-xs font-semibold text-white tracking-tight truncate font-mono">
-                  JOANVECTOR // CHAT SANDBOX
+                  JOANVECTOR - CHAT SANDBOX
                 </div>
                 <div className="text-[10px] text-zinc-500 font-mono">
                   Perimeter Filter & Heuristic Engine Active
@@ -114,7 +110,6 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
             </div>
           </div>
 
-          {/* Messages Feed */}
           <div className="p-5 h-[450px] overflow-y-auto space-y-4 bg-black/60 w-full min-w-0 font-sans">
             {messages.map((msg) => {
               const isUser = msg.sender === "user";
@@ -125,7 +120,6 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
                     isUser ? "flex-row-reverse" : "flex-row"
                   }`}
                 >
-                  {/* Avatar */}
                   <div
                     className={`w-7 h-7 flex items-center justify-center shrink-0 border overflow-hidden text-[10px] font-mono font-bold ${
                       isUser
@@ -150,7 +144,6 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
                     )}
                   </div>
 
-                  {/* Message Bubble */}
                   <div
                     className={`max-w-[85%] sm:max-w-[82%] p-3 text-xs leading-relaxed space-y-1 overflow-hidden break-words border ${
                       isUser
@@ -163,7 +156,7 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
                     <div className="flex items-center justify-between gap-4 text-[10px] text-zinc-500 font-mono pb-1 border-b border-zinc-900">
                       <span className="font-semibold truncate">
                         {isUser
-                          ? userProfile?.name || "Operador"
+                          ? userProfile?.name || DEFAULT_OPERATOR_NAME
                           : msg.blocked
                           ? "GATEWAY INTERCEPTOR [403]"
                           : "ASISTENTE VIRTUAL"}
@@ -194,7 +187,6 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Bar */}
           <div className="p-3.5 bg-[#09090b] border-t border-zinc-800 font-mono">
             {error && (
               <div className="mb-2.5 p-2 bg-red-950/40 border border-red-800 text-xs text-red-300 break-words">
@@ -224,7 +216,6 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Inspector Deck (5 cols) */}
         <div className="lg:col-span-5 w-full min-w-0 h-full">
           <SecurityInspectorPanel
             securityResult={lastSecurityResult}

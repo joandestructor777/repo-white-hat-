@@ -5,10 +5,10 @@ from pydantic import BaseModel, Field
 class SecurityRuleBase(BaseModel):
     name: str = Field(..., example="Bloquear extracción de System Prompt")
     keyword: str = Field(..., example="ignore previous instructions")
-    pattern_type: str = Field(default="CONTAINS", example="CONTAINS")  # CONTAINS, EXACT, REGEX, FUZZY
-    category: str = Field(..., example="PROMPT_INJECTION")  # PROMPT_INJECTION, SYSTEM_PROMPT_LEAK, CREDENTIAL_HARVESTING, DATA_EXFILTRATION, JAILBREAK, SQL_COMMAND_INJECTION
-    severity: str = Field(default="HIGH", example="HIGH")  # LOW, MEDIUM, HIGH, CRITICAL
-    action: str = Field(default="BLOCK", example="BLOCK")  # BLOCK, SANITIZE, FLAG_AND_LOG
+    pattern_type: str = Field(default="CONTAINS", example="CONTAINS")
+    category: str = Field(..., example="PROMPT_INJECTION")
+    severity: str = Field(default="HIGH", example="HIGH")
+    action: str = Field(default="BLOCK", example="BLOCK")
     risk_score: int = Field(default=80, ge=1, le=100)
     description: Optional[str] = Field(None, example="Detecta intentos de bypass de directivas del sistema del asistente")
     is_active: bool = Field(default=True)

@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
 import { UserProfile } from "../../shared/hooks/useUserProfile";
+import { DEFAULT_OPERATOR_NAME, DEFAULT_OPERATOR_ROLE } from "../../constants/security.constants";
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -60,8 +61,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
   const handleSave = () => {
     onSaveProfile(
-      name.trim() || "Joan",
-      role.trim() || "SecOps Analyst",
+      name.trim() || DEFAULT_OPERATOR_NAME,
+      role.trim() || DEFAULT_OPERATOR_ROLE,
       avatarUrl
     );
     onClose();
@@ -82,7 +83,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="CONFIGURACIÓN DE IDENTIDAD // OPERADOR"
+      title="CONFIGURACIÓN DE IDENTIDAD - OPERADOR"
       maxWidth="md"
     >
       <div className="space-y-5 font-sans">
@@ -92,7 +93,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </div>
         )}
 
-        {/* Upload & Preview Zone */}
         <div
           onDragOver={(e) => {
             e.preventDefault();
@@ -107,7 +107,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           }`}
           onClick={() => fileInputRef.current?.click()}
         >
-          {/* Avatar Preview */}
           <div className="mb-3">
             <div className="w-24 h-24 border border-zinc-700 bg-zinc-950 flex items-center justify-center overflow-hidden">
               {avatarUrl ? (
@@ -143,7 +142,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </div>
         </div>
 
-        {/* Action Buttons for Avatar */}
         {avatarUrl && (
           <div className="flex justify-center">
             <button
@@ -159,7 +157,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </div>
         )}
 
-        {/* Name and Role inputs */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono">
           <div className="space-y-1">
             <label className="block text-[11px] font-semibold uppercase text-zinc-400">
@@ -169,7 +166,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Joan"
+              placeholder={DEFAULT_OPERATOR_NAME}
               className="w-full bg-black border border-zinc-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-zinc-600 transition-all font-mono"
             />
           </div>
@@ -182,13 +179,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               type="text"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              placeholder="White Hat / SOC Lead"
+              placeholder={DEFAULT_OPERATOR_ROLE}
               className="w-full bg-black border border-zinc-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-zinc-600 transition-all font-mono"
             />
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex justify-end gap-3 pt-3 border-t border-zinc-800 font-mono">
           <Button variant="ghost" size="md" onClick={onClose} disabled={uploading} className="text-xs">
             [CANCELAR]
