@@ -86,7 +86,7 @@ export const WebsiteAssistantView: React.FC<WebsiteAssistantViewProps> = ({
               </div>
               <div className="min-w-0">
                 <div className="text-xs font-semibold text-white tracking-tight truncate font-mono">
-                  SENSEIGUARD // CHAT SANDBOX
+                  JOANVECTOR // CHAT SANDBOX
                 </div>
                 <div className="text-[10px] text-zinc-500 font-mono">
                   Perimeter Filter & Heuristic Engine Active

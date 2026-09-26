@@ -6,7 +6,7 @@ export interface UserProfile {
   avatarUrl: string; // Base64 data URL o vacío si no ha subido foto
 }
 
-const STORAGE_KEY = "senseiguard_user_profile_v1";
+const STORAGE_KEY = "joanvector_user_profile_v1";
 
 export function useUserProfile() {
   const [profile, setProfile] = useState<UserProfile>(() => {

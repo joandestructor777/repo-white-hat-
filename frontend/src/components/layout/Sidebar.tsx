@@ -57,7 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex items-center gap-2.5">
               <span className="w-2.5 h-2.5 bg-emerald-500 rounded-none inline-block shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
               <span className="font-mono text-base font-bold tracking-wider text-white uppercase">
-                SenseiGuard
+                JoanVector
               </span>
             </div>
             <span className="font-mono text-[10px] tracking-widest px-1.5 py-0.5 border border-zinc-700 text-zinc-400">

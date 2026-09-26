@@ -128,7 +128,7 @@ export const App: React.FC = () => {
         {/* Minimal Footer */}
         <footer className="border-t border-zinc-900 bg-[#070709] py-4 px-6 text-center text-xs text-zinc-500 font-mono mt-auto">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <span>SenseiGuard • Enterprise Cybersecurity Architecture</span>
+            <span>JoanVector • Enterprise Cybersecurity Architecture</span>
             <span className="text-[11px] text-zinc-600">FastAPI • SQLite / PostgreSQL • Vite</span>
           </div>
         </footer>

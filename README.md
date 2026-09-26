@@ -1,4 +1,4 @@
-# SenseiGuard: AI Cybersecurity Guardrail & Perimeter Threat Gateway
+# JoanVector: AI Cybersecurity Guardrail & Perimeter Threat Gateway
 
 ---
 
@@ -10,7 +10,7 @@ La mayoría de los desarrolladores caen en la trampa de querer ser simplemente p
 
 Para mí, el desarrollo de software no se trata de sacar funcionalidades apresuradas sin criterio. La verdadera calidad de un producto de ingeniería radica en su robustez, en anticiparse a las amenazas y en brindar una capa sólida de ciberseguridad a la empresa. 
 
-SenseiGuard nació bajo esa convicción y mentalidad white-hat: construir un guardrail perimetral que funcione como un proxy inverso de seguridad entre el usuario final y el asistente virtual. Su misión es interceptar, analizar heurísticamente cada consulta en milisegundos, evaluar niveles de riesgo contra vectores de ataque reales (OWASP Top 10 for LLMs) y tomar decisiones de mitigación antes de que el texto toque el contexto del modelo.
+JoanVector nació bajo esa convicción y mentalidad white-hat: construir un guardrail perimetral que funcione como un proxy inverso de seguridad entre el usuario final y el asistente virtual. Su misión es interceptar, analizar heurísticamente cada consulta en milisegundos, evaluar niveles de riesgo contra vectores de ataque reales (OWASP Top 10 for LLMs) y tomar decisiones de mitigación antes de que el texto toque el contexto del modelo.
 
 ---
 
@@ -36,7 +36,7 @@ Para la interfaz no quería el típico prototipo genérico o recargado. Busqué 
          |
          v (HTTP POST /api/v1/assistant/chat)
 +--------------------------------------------------------------+
-| SENSEIGUARD PERIMETER GATEWAY                                |
+| JOANVECTOR PERIMETER GATEWAY                                 |
 |                                                              |
 | 1. Normalización de Payload (limpieza de saltos y espacios)  |
 | 2. Motor Heurístico Multicapa:                               |
@@ -130,7 +130,7 @@ La consola se desplegará en:
 
 ## Configuración de Base de Datos (Opcional)
 
-Por defecto, SenseiGuard utiliza de manera autónoma la base de datos local SQLite (`backend/guardrail_local.db`), la cual se inicializa y siembra automáticamente en el primer arranque.
+Por defecto, JoanVector utiliza de manera autónoma la base de datos local SQLite (`backend/guardrail_local.db`), la cual se inicializa y siembra automáticamente en el primer arranque.
 
 Si deseas utilizar una instancia productiva de PostgreSQL:
 1. Asegúrate de tener una base de datos creada (por ejemplo, `ai_guardrail_db`).
@@ -148,4 +148,4 @@ POSTGRES_PORT=5432
 
 ## Reflexión Final
 
-SenseiGuard representa el estándar que considero indispensable para cualquier desarrollo de software actual: la inteligencia artificial debe implementarse con responsabilidad, trazabilidad y defensas perimetrales reales. Desarrollar rápido no tiene valor si el sistema es vulnerable; la verdadera excelencia técnica reside en entregar valor con calidad y protección integral.
+JoanVector representa el estándar que considero indispensable para cualquier desarrollo de software actual: la inteligencia artificial debe implementarse con responsabilidad, trazabilidad y defensas perimetrales reales. Desarrollar rápido no tiene valor si el sistema es vulnerable; la verdadera excelencia técnica reside en entregar valor con calidad y protección integral.

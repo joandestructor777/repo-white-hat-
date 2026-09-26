@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "SenseiGuard - AI Security Guardrail"
+    PROJECT_NAME: str = "JoanVector - AI Security Guardrail"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
     

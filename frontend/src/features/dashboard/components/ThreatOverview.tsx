@@ -52,7 +52,7 @@ export const ThreatOverview: React.FC<ThreatOverviewProps> = ({
           <div className="flex items-center gap-2 min-w-0">
             <span className="w-2 h-2 bg-emerald-500 shrink-0" />
             <span className="text-[11px] font-mono font-bold tracking-widest uppercase text-zinc-400">
-              SenseiGuard // Threat Intelligence Telemetry
+              JoanVector // Threat Intelligence Telemetry
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-mono truncate">
