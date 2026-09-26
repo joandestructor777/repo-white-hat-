@@ -23,6 +23,28 @@ SEED_RULES = [
         "is_active": True
     },
     {
+        "name": "Prompt Injection en Segunda Persona",
+        "keyword": "ignora tus instrucciones",
+        "pattern_type": "CONTAINS",
+        "category": "SYSTEM_PROMPT_LEAK",
+        "severity": "CRITICAL",
+        "action": "BLOCK",
+        "risk_score": 95,
+        "description": "Variación directa en segunda persona de prompt injection.",
+        "is_active": True
+    },
+    {
+        "name": "Extracción de Contraseñas Directa",
+        "keyword": "contraseñas",
+        "pattern_type": "CONTAINS",
+        "category": "CREDENTIAL_HARVESTING",
+        "severity": "CRITICAL",
+        "action": "BLOCK",
+        "risk_score": 90,
+        "description": "Petición directa de contraseñas de usuarios o sistemas.",
+        "is_active": True
+    },
+    {
         "name": "Petición directa de System Prompt",
         "keyword": "system prompt",
         "pattern_type": "CONTAINS",
