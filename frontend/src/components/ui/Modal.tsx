@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { X } from "lucide-react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -40,20 +39,22 @@ export const Modal: React.FC<ModalProps> = ({
   }[maxWidth];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-150">
       <div
-        className={`w-full ${maxWidthClass} bg-[#0c0c0e] border border-zinc-800 rounded-xl shadow-2xl overflow-hidden flex flex-col`}
+        className={`w-full ${maxWidthClass} bg-[#09090b] border border-zinc-700/80 shadow-2xl flex flex-col font-sans`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/80">
-          <h3 className="text-sm font-semibold tracking-wide uppercase text-white flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-            {title}
-          </h3>
+        <div className="flex items-center justify-between px-6 py-3.5 border-b border-zinc-800 bg-[#0c0c0e]">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2 h-2 bg-emerald-500 inline-block" />
+            <span className="text-xs font-mono font-semibold tracking-wider uppercase text-zinc-100">
+              {title}
+            </span>
+          </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="px-2 py-0.5 font-mono text-xs text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-600 bg-zinc-900 transition-colors"
           >
-            <X className="w-4 h-4" />
+            [X]
           </button>
         </div>
         <div className="p-6 overflow-y-auto max-h-[80vh]">{children}</div>

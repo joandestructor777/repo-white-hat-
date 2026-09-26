@@ -6,7 +6,7 @@ export interface UserProfile {
   avatarUrl: string; // Base64 data URL o vacío si no ha subido foto
 }
 
-const STORAGE_KEY = "nexasentry_user_profile_v2";
+const STORAGE_KEY = "senseiguard_user_profile_v1";
 
 export function useUserProfile() {
   const [profile, setProfile] = useState<UserProfile>(() => {
@@ -19,9 +19,9 @@ export function useUserProfile() {
       // fallback
     }
     return {
-      name: "Analista de Ciberseguridad",
-      role: "Auditor SOC / Ethical Hacker",
-      avatarUrl: "/hacker-icon.jpg",
+      name: "Joan",
+      role: "White Hat / SOC Lead",
+      avatarUrl: "",
     };
   });
 

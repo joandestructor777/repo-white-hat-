@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { Upload, Camera, Trash2, User, Shield, Check, Image as ImageIcon } from "lucide-react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
 import { UserProfile } from "../../shared/hooks/useUserProfile";
@@ -36,7 +35,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
       const base64 = await onUploadImage(file);
       setAvatarUrl(base64);
     } catch (err: any) {
-      setError(err.message || "Error al cargar la imagen.");
+      setError(err.message || "Error al procesar el archivo de imagen.");
     } finally {
       setUploading(false);
     }
@@ -60,29 +59,35 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   };
 
   const handleSave = () => {
-    onSaveProfile(name.trim() || "Analista de Ciberseguridad", role.trim() || "Auditor SOC", avatarUrl);
+    onSaveProfile(
+      name.trim() || "Joan",
+      role.trim() || "SecOps Analyst",
+      avatarUrl
+    );
     onClose();
   };
 
   const getInitials = (n: string) => {
-    return n
-      .split(" ")
-      .map((part) => part[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "AS";
+    return (
+      n
+        .split(" ")
+        .map((part) => part[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase() || "JO"
+    );
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Personalizar Foto de Perfil & Usuario"
+      title="CONFIGURACIÓN DE IDENTIDAD // OPERADOR"
       maxWidth="md"
     >
-      <div className="space-y-6 p-2">
+      <div className="space-y-5 font-sans">
         {error && (
-          <div className="p-3.5 bg-red-950/40 border border-red-800/80 rounded-xl text-xs text-red-300 font-mono">
+          <div className="p-3 bg-red-950/40 border border-red-800 text-xs text-red-300 font-mono">
             {error}
           </div>
         )}
@@ -95,33 +100,28 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
-          className={`relative p-8 rounded-2xl border-2 border-dashed transition-all flex flex-col items-center justify-center text-center cursor-pointer ${
+          className={`p-6 border border-dashed transition-all flex flex-col items-center justify-center text-center cursor-pointer ${
             dragOver
-              ? "border-white bg-zinc-900/60"
-              : "border-zinc-800 bg-[#09090b] hover:border-zinc-600 hover:bg-zinc-900/30"
+              ? "border-white bg-zinc-900"
+              : "border-zinc-800 bg-black/60 hover:border-zinc-600 hover:bg-zinc-950"
           }`}
           onClick={() => fileInputRef.current?.click()}
         >
           {/* Avatar Preview */}
-          <div className="relative mb-4 group">
-            <div className="w-28 h-28 rounded-2xl overflow-hidden border-2 border-white/80 shadow-2xl bg-zinc-900 flex items-center justify-center">
+          <div className="mb-3">
+            <div className="w-24 h-24 border border-zinc-700 bg-zinc-950 flex items-center justify-center overflow-hidden">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
                   alt={name}
-                  className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-950 text-white font-mono text-xl font-bold tracking-wider">
-                  <User className="w-8 h-8 mb-1 text-zinc-500" />
-                  <span className="text-sm text-zinc-400">{getInitials(name)}</span>
+                  <span className="text-zinc-500 text-xs">[AVATAR]</span>
+                  <span className="text-sm text-zinc-300 mt-1">{getInitials(name)}</span>
                 </div>
               )}
-            </div>
-
-            <div className="absolute inset-0 bg-black/60 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[11px] font-mono">
-              <Camera className="w-5 h-5 mb-1" />
-              <span>Cambiar</span>
             </div>
           </div>
 
@@ -133,13 +133,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             className="hidden"
           />
 
-          <div className="space-y-1">
-            <div className="flex items-center justify-center gap-2 text-sm font-semibold text-white">
-              <Upload className="w-4 h-4 text-white" />
-              <span>Haz clic o arrastra tu foto aquí</span>
+          <div className="space-y-1 font-mono">
+            <div className="text-xs font-semibold text-zinc-200">
+              [SELECCIONAR O ARRASTRAR ARCHIVO DE IMAGEN]
             </div>
-            <p className="text-xs text-zinc-400 font-mono">
-              Sube tu foto real desde tu computadora (PNG, JPG, WEBP • Máx 5MB)
+            <p className="text-[11px] text-zinc-500">
+              Formatos aceptados: PNG, JPG, WEBP (Máx 5MB)
             </p>
           </div>
         </div>
@@ -153,50 +152,49 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 e.stopPropagation();
                 handleRemovePhoto();
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono text-red-400 hover:text-red-300 hover:bg-red-950/40 border border-red-900/60 transition-colors cursor-pointer"
+              className="px-3 py-1 font-mono text-xs text-rose-400 hover:text-rose-200 border border-zinc-800 hover:border-rose-900 bg-rose-950/20 transition-colors cursor-pointer"
             >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Quitar mi foto actual</span>
+              [REMOVER IMAGEN ACTUAL]
             </button>
           </div>
         )}
 
-        {/* Name and Role inputs with generous padding */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 font-mono">
-              Nombre de Usuario
+        {/* Name and Role inputs */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono">
+          <div className="space-y-1">
+            <label className="block text-[11px] font-semibold uppercase text-zinc-400">
+              Identificador / Usuario
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Ej: David García"
-              className="w-full bg-[#121215] border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-white transition-all font-mono"
+              placeholder="Joan"
+              className="w-full bg-black border border-zinc-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-zinc-600 transition-all font-mono"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-400 font-mono">
-              Rol / Cargo en el SOC
+          <div className="space-y-1">
+            <label className="block text-[11px] font-semibold uppercase text-zinc-400">
+              Rol / Asignación en SOC
             </label>
             <input
               type="text"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              placeholder="Ej: Analista de Seguridad Senior"
-              className="w-full bg-[#121215] border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-white transition-all font-mono"
+              placeholder="White Hat / SOC Lead"
+              className="w-full bg-black border border-zinc-800 px-3 py-2 text-xs text-white focus:outline-none focus:border-zinc-600 transition-all font-mono"
             />
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3 pt-4 border-t border-zinc-800/80">
-          <Button variant="ghost" size="md" onClick={onClose} disabled={uploading}>
-            Cancelar
+        <div className="flex justify-end gap-3 pt-3 border-t border-zinc-800 font-mono">
+          <Button variant="ghost" size="md" onClick={onClose} disabled={uploading} className="text-xs">
+            [CANCELAR]
           </Button>
-          <Button variant="primary" size="md" onClick={handleSave} loading={uploading}>
-            Guardar Cambios
+          <Button variant="primary" size="md" onClick={handleSave} loading={uploading} className="text-xs">
+            [GUARDAR CAMBIOS]
           </Button>
         </div>
       </div>

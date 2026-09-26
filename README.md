@@ -1,76 +1,151 @@
-# SentryGuard AI • AI Security Gateway & Reverse Proxy Firewall
-
-¡Hola! Este repositorio contiene el desarrollo completo de mi proyecto de ciberseguridad enfocado en la protección y auditoría de asistentes virtuales en aplicaciones web. 
+# SenseiGuard: AI Cybersecurity Guardrail & Perimeter Threat Gateway
 
 ---
 
-## 💡 ¿Por qué decidí hacer esto y por qué es un proyecto interesante?
+## Por qué decidí construir este proyecto
 
-La verdad es que **es un proyecto interesante** porque hoy en día casi cualquier página web le está metiendo un chatbot con inteligencia artificial para atender a los usuarios, pero casi nadie se está preocupando por la seguridad detrás de eso. 
+Cuando me senté a pensar en este proyecto, partí de una realidad que veo todos los días en la industria tecnológica y que me parece preocupante: vivimos en una época donde casi cualquier empresa quiere integrar asistentes virtuales e inteligencia artificial a sus plataformas. Sin embargo, muy pocos se detienen a analizar qué implica realmente poner un modelo de lenguaje en producción de cara a usuarios externos.
 
-En lo que estuvimos investigando, **nos pareció en el procedimiento que hicimos** que la gran mayoría de empresas cometen el error de conectar su página web directamente con el modelo de IA. Un usuario con malas intenciones puede aprovecharse de esto para sacarle información confidencial al asistente: desde las instrucciones internas con las que fue programado (*system prompt*), hasta contraseñas de bases de datos, claves de API (`api_key`) o incluso intentar inyecciones SQL simuladas.
+La mayoría de los desarrolladores caen en la trampa de querer ser simplemente programadores de paso: les asignan una tarea, conectan un endpoint de OpenAI o Anthropic, colocan un input en la interfaz, lo entregan rápido para cumplir con el sprint y pasan a lo siguiente. No están viendo las enormes brechas de seguridad que dejan abiertas en el camino. No se preguntan: ¿qué pasa si un atacante aplica una inyección de prompt para extraer instrucciones del sistema? ¿Qué pasa si engañan al modelo para filtrar credenciales internas, datos de clientes o secretos empresariales?
 
-**Me parece que** confiar ciegamente en que el modelo de IA "se va a portar bien" o "va a respetar las reglas que le dimos en texto" es un error grave en ciberseguridad. Por eso **lo veo útil** y necesario crear una capa intermedia: un *Security Gateway* o *Reverse Proxy* que se pare justo en la mitad entre la página web y el asistente. De esta forma, cada mensaje que el usuario escribe es inspeccionado en milisegundos, evaluado contra una base de datos de reglas y palabras clave peligrosas en **PostgreSQL**, y si detecta algo raro, lo frena de golpe antes de que comprometa la aplicación.
+Para mí, el desarrollo de software no se trata de sacar funcionalidades apresuradas sin criterio. La verdadera calidad de un producto de ingeniería radica en su robustez, en anticiparse a las amenazas y en brindar una capa sólida de ciberseguridad a la empresa. 
 
----
-
-## 🛠️ ¿Cómo lo construí? (Estructura y Tecnologías)
-
-Quise hacer las cosas bien desde el inicio, separando claramente el backend del frontend y organizando el código de forma limpia y mantenible:
-
-### 🐍 Backend (FastAPI + PostgreSQL en Python)
-* **Motor de Inspección (`app/core/security_engine.py`):** **Nos pareció en el procedimiento que hicimos** que los atacantes nunca escriben las palabras prohibidas de forma normal; suelen meter espacios entre letras (como `s y s t e m`), cambiar acentos o usar mayúsculas raras para intentar engañar a los validadores típicos. Por eso creé un motor heurístico que normaliza el texto, desofusca los caracteres y evalúa expresiones regulares para calcular un puntaje de riesgo de 0 a 100%.
-* **CRUD de Reglas y Políticas en PostgreSQL (`app/models/rule.py`):** **Me parece interesante** que las reglas no estén fijas en el código. Las guardé en una base de datos relacional para que cualquier administrador pueda entrar, crear una nueva palabra clave sospechosa, cambiarle la severidad (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`) o desactivarla con un clic sin tener que reiniciar los servidores.
-* **Auditoría Forense (`app/models/audit_log.py`):** Cada petición que entra se guarda de forma inmutable con su fecha, la IP del cliente, el prompt evaluado, las palabras detectadas y el dictamen técnico. Esto **lo veo útil** especialmente para auditorías de seguridad reales tipo ISO 27001 o SOC 2.
-
-### ⚛️ Frontend (React 19 + TypeScript + Vite + Tailwind CSS)
-* **Arquitectura basada en Features:** Organicé las carpetas por funcionalidades desacopladas (`features/dashboard`, `features/assistant-simulator`, `features/security-rules`, `features/audit-logs`, además de `constants/`, `components/` y `shared/`). **Me parece que** esta es la forma más profesional de escalar un proyecto frontend.
-* **Diseño e Identidad:** Quería que tuviera una estética moderna y seria, en tonos negros profundos y blancos de alto contraste, estilo herramientas de desarrollo reales (*como Linear o Datadog*), alejándome de diseños genéricos. Además, le integré mi propio **icono de hacker** oficial en el header y habilité la opción para subir la foto real de usuario desde el computador para personalizar los mensajes del chat.
+SenseiGuard nació bajo esa convicción y mentalidad white-hat: construir un guardrail perimetral que funcione como un proxy inverso de seguridad entre el usuario final y el asistente virtual. Su misión es interceptar, analizar heurísticamente cada consulta en milisegundos, evaluar niveles de riesgo contra vectores de ataque reales (OWASP Top 10 for LLMs) y tomar decisiones de mitigación antes de que el texto toque el contexto del modelo.
 
 ---
 
-## 📋 ¿Qué vas a encontrar en la aplicación?
+## Decisiones técnicas y herramientas utilizadas
 
-1. **Métricas & SOC (Dashboard):** Muestra el resumen de telemetría en tiempo real: cuántas peticiones se han analizado, la tasa de amenazas bloqueadas, el riesgo promedio y la distribución de ataques según la taxonomía oficial de **OWASP LLM Top 10**.
-2. **Playground & Inspector (La prueba en vivo):**
-   * A la izquierda tienes la consola del asistente virtual para interactuar o probar ataques.
-   * A la derecha tienes el **Inspector de Telemetría** en tiempo real: te muestra el veredicto (`HTTP 200 OK` vs `HTTP 403 FORBIDDEN`), el medidor de riesgo, las reglas que hicieron match y una pestaña con el **JSON crudo** devuelto por la API con botón para copiarlo.
-   * En la parte superior incluí una barra con escenarios preconfigurados basados en **OWASP-LLM01, OWASP-LLM06 y CWE-89** para poder probar ataques con 1 solo clic frente a evaluadores.
-3. **Políticas de Seguridad (CRUD):** Tabla completa donde puedes crear, buscar, editar y borrar palabras clave prohibidas, además de un botón para restaurar las 15 políticas base de OWASP.
-4. **Logs de Auditoría:** Historial forense de todas las peticiones con modal de análisis detallado.
+En el proceso de creación de este proyecto seleccioné herramientas específicas porque cada una responde a un propósito claro de arquitectura y rendimiento:
+
+### 1. Backend: FastAPI (Python 3.11+)
+Elegí FastAPI porque para un motor de inspección de seguridad la latencia es crítica. Al situarse en medio de cada petición, el guardrail no puede convertirse en un cuello de botella. Python me permitió estructurar un analizador heurístico ágil basado en expresiones regulares, coincidencias difusas contra ofuscación de texto y clasificación de riesgo basada en pesos. Además, la tipificación estricta con Pydantic y la generación automática de contratos OpenAPI facilitan la integración en pipelines empresariales.
+
+### 2. Base de datos: Persistencia Híbrida (PostgreSQL con Respaldo Automático a SQLite)
+Quise diseñar una persistencia tolerante a fallos. En un entorno productivo corporativo, el sistema se conecta a PostgreSQL para manejar altos volúmenes de eventos forenses y concurrencia. Sin embargo, si el servidor de Postgres no está activo en una máquina local o estación de trabajo, el motor detecta la indisponibilidad de forma transparente y activa una base de datos local SQLite (`guardrail_local.db`). Esto asegura que el sistema siempre esté operativo desde el segundo cero, con sus tablas creadas y sus políticas precargadas.
+
+### 3. Frontend: React, Vite y TypeScript (Consola SOC)
+Para la interfaz no quería el típico prototipo genérico o recargado. Busqué crear una consola operativa seria, sobria y orientada a centros de operaciones de seguridad (SOC). Diseñé un layout con navegación lateral técnica, telemetría del gateway en tiempo real, paleta en tonos oscuros de alto contraste y tipografía monoespaciada para lectura forense, prescindiendo deliberadamente de iconografías decorativas innecesarias para priorizar la densidad informativa y la concentración del analista.
 
 ---
 
-## 🚀 Cómo correr el proyecto en tu máquina
+## Arquitectura del Sistema
 
-Dejé todo listo para que levantarlo sea lo más fácil posible:
-
-### Opción 1: En 1 solo clic (El más cómodo)
-Doble clic en el archivo raíz:
-```bat
-start_all.bat
 ```
-Este script abre dos ventanas automáticamente:
-* **Frontend Web:** [http://localhost:5173](http://localhost:5173)
-* **Documentación Interactiva Swagger (FastAPI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+[ Usuario / Atacante ]
+         |
+         v (HTTP POST /api/v1/assistant/chat)
++--------------------------------------------------------------+
+| SENSEIGUARD PERIMETER GATEWAY                                |
+|                                                              |
+| 1. Normalización de Payload (limpieza de saltos y espacios)  |
+| 2. Motor Heurístico Multicapa:                               |
+|    - Detección de Prompt Injections y Jailbreaks             |
+|    - Extracción de Prompt de Sistema (System Leaks)          |
+|    - Exfiltración de Credenciales y Secretos de Empresa      |
+|    - Manipulación de Roles y Evasión Heurística              |
+| 3. Evaluación de Umbrales y Scoring de Riesgo (0 a 100%)     |
+| 4. Decisión del Guardrail:                                   |
+|    - Score >= 70%: HTTP 403 Forbidden (Bloqueo preventivo)  |
+|    - Score >= 40%: HTTP 200 Flagged (Auditoría reforzada)    |
+|    - Score < 40%:  HTTP 200 Pass (Tráfico inocuo / seguro)   |
+| 5. Registro Forense Inmutable en Base de Datos               |
++--------------------------------------------------------------+
+         |
+         +---> Si es aprobado: Inferencia al Asistente Virtual
+         +---> Si es bloqueado: Respuesta mitigada de denegación
+```
 
-### Opción 2: Manual por consolas
+---
 
-#### 1. Levantar el Backend:
+## Módulos de la Plataforma
+
+### 1. Radar de Amenazas y Telemetría Forense
+Panel centralizado que recopila el volumen de peticiones procesadas, porcentaje de mitigación perimetral, severidad promedio y distribución taxonómica de incidentes clasificados bajo los lineamientos del OWASP Top 10 para aplicaciones con modelos de lenguaje.
+
+### 2. Sandbox de Evaluación Heurística (Simulador)
+Entorno interactivo dividido en dos paneles: a la izquierda, la sesión de conversación del asistente tal como la experimenta el cliente final; a la derecha, el inspector técnico que expone la latencia del proxy, el desglose de reglas disparadas, las razones forenses de mitigación y el payload JSON estructurado emitido por el backend.
+
+### 3. Matriz de Políticas y Reglas de Ciberseguridad
+Módulo administrativo con soporte CRUD completo para definir palabras clave, patrones regex o frases vigiladas. Permite asignar nivel de severidad (Baja, Media, Alta, Crítica), puntaje de riesgo asignado y acción automática (Bloquear o Alertar). Incluye un mecanismo para restablecer en cualquier momento el paquete estándar de reglas predefinidas.
+
+### 4. Bitácora de Auditoría y Trazabilidad
+Registro inmutable de cada interacción con metadatos indispensables para análisis post-incidente: timestamp preciso, dirección IP de origen, texto íntegro del prompt, vectores identificados, veredicto final y respuesta generada.
+
+---
+
+## Guía de Puesta en Marcha (Sin Scripts Batch)
+
+El proyecto está diseñado para ejecutarse de manera directa y limpia desde cualquier consola moderna (Bash, PowerShell o Símbolo del Sistema), sin depender de archivos de lote (`.bat`).
+
+### Requisitos Previos
+- Python 3.11 o superior instalado y disponible en el PATH del sistema.
+- Node.js 18 o superior y npm instalados.
+
+---
+
+### Paso 1: Levantar el Backend (FastAPI)
+
+Abre tu terminal en la raíz del repositorio y accede a la carpeta del backend:
+
+En entornos Bash (Git Bash, macOS, Linux):
 ```bash
 cd backend
-.\venv\Scripts\activate
-python -m uvicorn app.main:app --reload --port 8000
+./venv/Scripts/python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-#### 2. Levantar el Frontend:
+En entornos PowerShell (Windows):
+```powershell
+cd backend
+.\venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+En Símbolo del Sistema (CMD):
+```cmd
+cd backend
+venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+El servidor quedará a la escucha en:
+- API Base: `http://localhost:8000`
+- Documentación interactiva Swagger: `http://localhost:8000/docs`
+- Chequeo de estado: `http://localhost:8000/health`
+
+---
+
+### Paso 2: Levantar la Consola Frontend (React + Vite)
+
+En una segunda pestaña o ventana de tu terminal:
+
+En Bash / PowerShell / CMD:
 ```bash
 cd frontend
 npm run dev
 ```
 
+La consola se desplegará en:
+- Aplicación Web: `http://localhost:5173`
+
 ---
 
-## 💭 Reflexión final del desarrollo
+## Configuración de Base de Datos (Opcional)
 
-Al final, **me parece que** este proyecto demuestra cómo la seguridad en inteligencia artificial tiene que abordarse desde la ingeniería de software y la ciberseguridad aplicada. **Nos pareció en el procedimiento que hicimos** que no basta con pedirle "amablemente" a un chatbot que guarde secretos; tener una pasarela perimetral con reglas en PostgreSQL y análisis en tiempo real es lo que de verdad protege a una aplicación corporativa en producción.
+Por defecto, SenseiGuard utiliza de manera autónoma la base de datos local SQLite (`backend/guardrail_local.db`), la cual se inicializa y siembra automáticamente en el primer arranque.
+
+Si deseas utilizar una instancia productiva de PostgreSQL:
+1. Asegúrate de tener una base de datos creada (por ejemplo, `ai_guardrail_db`).
+2. Crea un archivo `.env` dentro de la carpeta `backend/` tomando como referencia `.env.example`:
+```env
+POSTGRES_SERVER=localhost
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=tu_contraseña_aqui
+POSTGRES_DB=ai_guardrail_db
+POSTGRES_PORT=5432
+```
+3. El sistema priorizará la conexión a PostgreSQL y mantendrá SQLite únicamente como contingencia.
+
+---
+
+## Reflexión Final
+
+SenseiGuard representa el estándar que considero indispensable para cualquier desarrollo de software actual: la inteligencia artificial debe implementarse con responsabilidad, trazabilidad y defensas perimetrales reales. Desarrollar rápido no tiene valor si el sistema es vulnerable; la verdadera excelencia técnica reside en entregar valor con calidad y protección integral.
