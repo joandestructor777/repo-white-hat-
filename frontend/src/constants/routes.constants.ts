@@ -3,6 +3,7 @@ export const APP_ROUTES = {
   SIMULATOR: "simulator",
   RULES: "rules",
   AUDIT: "audit",
+  COMPENHACK: "compenhack",
 } as const;
 
 export type AppTab = typeof APP_ROUTES[keyof typeof APP_ROUTES];

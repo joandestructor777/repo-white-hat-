@@ -9,26 +9,34 @@ from app.schemas.assistant_schema import AssistantChatResponse, SecurityInspecti
 SAFE_KNOWLEDGE_BASE = [
     {
         "triggers": ["hola", "buenos dias", "buenas tardes", "saludos"],
-        "reply": "¡Hola! Bienvenido a NexaSentry Technologies. Soy tu asistente virtual corporativo. ¿En qué puedo ayudarte hoy sobre nuestros servicios, productos o soporte técnico?"
+        "reply": "¡Hola! Bienvenido a CompenHack. Soy tu asistente virtual de bienestar integral. ¿En qué puedo ayudarte hoy con tus citas médicas, subsidio o servicios de recreación?"
+    },
+    {
+        "triggers": ["cita", "medico", "medica", "salud", "doctor", "odontologia"],
+        "reply": "Para agendar tu cita médica en CompenHack Salud, puedes solicitar medicina general, odontología y laboratorio ingresando con tu número de documento en la sección de citas o llamando a nuestra línea 601 3077001."
+    },
+    {
+        "triggers": ["subsidio", "cuota", "monetario", "pago", "giro"],
+        "reply": "El subsidio monetario de CompenHack se consigna durante los primeros días hábiles de cada mes a tu cuenta bancaria o billetera móvil registrada para trabajadores con categoría A y B."
+    },
+    {
+        "triggers": ["recreacion", "piscina", "sede", "hotel", "pasadia", "parque"],
+        "reply": "Contamos con sedes recreativas y deportivas en Calle 26, Suba, Autopista Sur y hoteles en Girardot. Puedes reservar tus pasadías con descuento especial según tu categoría de afiliación."
     },
     {
         "triggers": ["precio", "costo", "planes", "tarifas", "cotizar"],
-        "reply": "Nuestros planes para empresas inician desde $49 USD/mes en el plan Starter, $149 USD/mes en el plan Pro para equipos, y cotizaciones a la medida para planes Enterprise con soporte 24/7."
+        "reply": "Nuestras tarifas están subsidiadas según la categoría de afiliación (A, B o C) para afiliados y beneficiarios. Consulta la tabla de copagos en nuestro portal."
     },
     {
         "triggers": ["horario", "atencion", "abierto", "soporte"],
-        "reply": "Nuestro equipo de atención al cliente está disponible de lunes a viernes de 8:00 AM a 7:00 PM (hora local), y soporte crítico para incidentes 24 horas al día los 7 días de la semana."
-    },
-    {
-        "triggers": ["servicios", "que hacen", "que ofrecen", "empresa"],
-        "reply": "En NexaSentry ofrecemos soluciones en ciberseguridad para aplicaciones web, auditoría de vulnerabilidades, protección perimetral para inteligencia artificial y monitorización en tiempo real."
+        "reply": "Nuestras sedes de atención están abiertas de lunes a viernes de 7:00 AM a 6:00 PM y sábados de 8:00 AM a 1:00 PM. Nuestro asistente digital atiende las 24 horas."
     }
 ]
 
 GENERIC_SAFE_REPLIES = [
-    "Gracias por tu consulta. Como asistente oficial, estoy para resolver dudas sobre nuestra plataforma, planes comerciales o soporte técnico.",
-    "Entendido. Con gusto puedo orientarte sobre las soluciones que ofrecemos en nuestra plataforma web.",
-    "He recibido tu mensaje. ¿Hay alguna función o servicio específico sobre el que te gustaría que te brinde más detalles?"
+    "Gracias por comunicarte con CompenHack. Con gusto puedo orientarte sobre citas médicas, subsidios o actividades familiares.",
+    "He recibido tu mensaje. ¿Deseas información sobre afiliaciones, trámites de salud o recreación en CompenHack?",
+    "Entendido. Como asistente virtual de CompenHack, estoy para orientarte en todos los servicios de bienestar para ti y tu familia."
 ]
 
 class AssistantService:

@@ -46,6 +46,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: "Logs de Auditoría",
       desc: "Registro forense",
     },
+    {
+      id: APP_ROUTES.COMPENHACK,
+      code: "05",
+      tag: "PORTAL",
+      label: "CompenHack (Web Real)",
+      desc: "Simulación web cliente",
+    },
   ];
 
   return (

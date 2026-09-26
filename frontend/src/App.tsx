@@ -4,6 +4,7 @@ import { ThreatOverview } from "./features/dashboard/components/ThreatOverview";
 import { WebsiteAssistantView } from "./features/assistant-simulator/components/WebsiteAssistantView";
 import { RuleTable } from "./features/security-rules/components/RuleTable";
 import { AuditLogTable } from "./features/audit-logs/components/AuditLogTable";
+import { CompenHackPortal } from "./features/compenhack/components/CompenHackPortal";
 import { useRules } from "./features/security-rules/hooks/useRules";
 import { useAuditLogs } from "./features/audit-logs/hooks/useAuditLogs";
 import { useUserProfile } from "./shared/hooks/useUserProfile";
@@ -52,6 +53,15 @@ export const App: React.FC = () => {
     const interval = setInterval(checkHealth, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  // Full-page view for the company client portal simulation (CompenHack)
+  if (currentTab === APP_ROUTES.COMPENHACK) {
+    return (
+      <CompenHackPortal
+        onBackToSOC={() => setCurrentTab(APP_ROUTES.DASHBOARD)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#050507] text-[#f4f4f5] flex font-sans selection:bg-white selection:text-black">
