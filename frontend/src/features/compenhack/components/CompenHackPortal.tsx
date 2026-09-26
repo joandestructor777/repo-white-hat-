@@ -49,7 +49,7 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
 
     try {
       const res = await apiClient.post("/assistant/chat", {
-        prompt: promptToSend,
+        message: promptToSend,
         client_ip: "192.168.1.105",
       });
 
@@ -63,12 +63,17 @@ export const CompenHackPortal: React.FC<CompenHackPortalProps> = ({ onBackToSOC 
 
       setMessages((prev) => [...prev, botMsg]);
     } catch (err: any) {
+      let errorText = "[403 ERROR] Solicitud bloqueada por la capa de seguridad perimetral JoanVector.";
+      if (typeof err?.response?.data?.detail === "string") {
+        errorText = err.response.data.detail;
+      } else if (err?.response?.data?.reply) {
+        errorText = err.response.data.reply;
+      }
+
       const errMsg: Message = {
         id: (Date.now() + 1).toString(),
         sender: "bot",
-        text:
-          err?.response?.data?.detail ||
-          "[403 ERROR] La solicitud fue bloqueada por el sistema perimetral de seguridad JoanVector.",
+        text: errorText,
         blocked: true,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };

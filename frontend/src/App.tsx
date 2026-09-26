@@ -13,9 +13,23 @@ import { APP_ROUTES, AppTab } from "./constants/routes.constants";
 import { apiClient } from "./shared/api/axiosClient";
 
 export const App: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<AppTab>(APP_ROUTES.DASHBOARD);
+  const [currentTab, setCurrentTab] = useState<AppTab>(() => {
+    try {
+      const saved = sessionStorage.getItem("joanvector_active_tab");
+      if (saved && Object.values(APP_ROUTES).includes(saved as any)) {
+        return saved as AppTab;
+      }
+    } catch {}
+    return APP_ROUTES.DASHBOARD;
+  });
   const [backendOnline, setBackendOnline] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("joanvector_active_tab", currentTab);
+    } catch {}
+  }, [currentTab]);
 
   // User Profile with Avatar & Image Upload
   const { profile, updateProfile, uploadCustomImage, removeAvatar } = useUserProfile();
