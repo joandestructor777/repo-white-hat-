@@ -14,7 +14,7 @@ class SecurityAuditLogResponse(BaseModel):
     threat_categories: List[str]
     response_text: Optional[str] = None
     mitigation_reason: Optional[str] = None
-    created_at: datetime
+    created_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

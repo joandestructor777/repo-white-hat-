@@ -29,7 +29,7 @@ class SecurityRuleUpdate(BaseModel):
 
 class SecurityRuleResponse(SecurityRuleBase):
     id: int
-    created_at: datetime
+    created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
     class Config:

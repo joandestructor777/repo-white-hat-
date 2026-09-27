@@ -87,7 +87,7 @@ Portal web institucional minimalista en colores corporativos (`#FF6600`) que rec
 
 ## Guia de Puesta en Marcha (Ejecucion Manual por Consola)
 
-El proyecto esta disenado para ejecutarse de manera directa y limpia desde cualquier terminal moderna (PowerShell, Bash o CMD), sin depender exclusivamente de scripts batch.
+El proyecto esta disenado para ejecutarse de manera directa y limpia desde cualquier terminal moderna (PowerShell, Bash o CMD), listo para desarrollo local y despliegue en la nube (Azure).
 
 ### Requisitos Previos
 - Python 3.11 o superior instalado y disponible en el PATH del sistema.
