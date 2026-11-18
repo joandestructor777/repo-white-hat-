@@ -3,17 +3,24 @@ import { AuditLog } from "../services/auditService";
 import { Modal } from "../../../components/ui/Modal";
 import { Button } from "../../../components/ui/Button";
 import { formatDateTime, getSeverityStyle, getRiskScoreColor } from "../../../shared/utils/formatters";
+import { ThreatIntelCard } from "../../threat-intel/components/ThreatIntelCard";
 
 interface AuditLogTableProps {
   logs: AuditLog[];
   loading: boolean;
   onRefresh: (blockedOnly?: boolean) => void;
+  isAuthenticated?: boolean;
+  onRequireAuth?: () => void;
+  onRuleApplied?: () => void;
 }
 
 export const AuditLogTable: React.FC<AuditLogTableProps> = ({
   logs,
   loading,
   onRefresh,
+  isAuthenticated = false,
+  onRequireAuth = () => {},
+  onRuleApplied,
 }) => {
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
   const [blockedOnly, setBlockedOnly] = useState(false);
@@ -98,86 +105,74 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
             <table className="w-full text-left border-collapse text-xs min-w-[760px]">
               <thead>
                 <tr className="border-b border-zinc-800 bg-[#0c0c0e] text-zinc-400 font-mono uppercase tracking-wider text-[11px]">
-                  <th className="py-3 px-5 w-36 font-semibold">Timestamp</th>
-                  <th className="py-3 px-5 w-28 font-semibold">Estado</th>
-                  <th className="py-3 px-5 w-28 font-semibold">IP Origen</th>
-                  <th className="py-3 px-5 font-semibold">Prompt Inspeccionado</th>
-                  <th className="py-3 px-5 font-semibold">Términos Detectados</th>
-                  <th className="py-3 px-5 w-36 font-semibold">Severidad / Riesgo</th>
-                  <th className="py-3 px-5 text-right w-28 font-semibold">Análisis</th>
+                  <th className="py-3 px-4 font-semibold w-16">ID</th>
+                  <th className="py-3 px-4 font-semibold w-36">TIMESTAMP</th>
+                  <th className="py-3 px-4 font-semibold w-28">ESTADO</th>
+                  <th className="py-3 px-4 font-semibold w-24">SEVERIDAD</th>
+                  <th className="py-3 px-4 font-semibold w-20">RIESGO</th>
+                  <th className="py-3 px-4 font-semibold">PAYLOAD INSPECCIONADO</th>
+                  <th className="py-3 px-4 font-semibold w-28">ORIGEN IP</th>
+                  <th className="py-3 px-4 font-semibold w-28 text-right">FORENSE</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60 font-mono">
-                {filteredLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-zinc-900/40 transition-colors">
-                    <td className="py-3 px-5 whitespace-nowrap text-zinc-500 text-[11px]">
-                      {formatDateTime(log.created_at)}
-                    </td>
-
-                    <td className="py-3 px-5 whitespace-nowrap">
-                      {log.blocked ? (
-                        <span className="font-bold text-[11px] text-red-400 bg-red-950/40 px-2 py-0.5 border border-red-800">
-                          [403 BLOCK]
-                        </span>
-                      ) : (
-                        <span className="font-bold text-[11px] text-emerald-400 bg-emerald-950/30 px-2 py-0.5 border border-emerald-800">
-                          [200 PASS]
-                        </span>
-                      )}
-                    </td>
-
-                    <td className="py-3 px-5 whitespace-nowrap text-zinc-400 text-xs">
-                      {log.client_ip}
-                    </td>
-
-                    <td className="py-3 px-5 max-w-[240px]">
-                      <div className="truncate text-xs text-zinc-200" title={log.prompt_text}>
-                        {log.prompt_text}
-                      </div>
-                    </td>
-
-                    <td className="py-3 px-5 text-xs max-w-[200px]">
-                      {log.detected_keywords && log.detected_keywords.length > 0 ? (
-                        <div
-                          className="truncate text-red-300 bg-black border border-red-900/80 px-2 py-0.5 text-[11px] font-semibold"
-                          title={log.detected_keywords.join(", ")}
+                {filteredLogs.map((log) => {
+                  const sevStyle = getSeverityStyle(log.highest_severity);
+                  return (
+                    <tr
+                      key={log.id}
+                      className="hover:bg-zinc-900/40 transition-colors group cursor-pointer"
+                      onClick={() => setSelectedLog(log)}
+                    >
+                      <td className="py-3 px-4 text-zinc-500 text-[11px]">#{log.id}</td>
+                      <td className="py-3 px-4 text-zinc-400 text-[11px]">
+                        {formatDateTime(log.created_at)}
+                      </td>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`inline-block px-2 py-0.5 text-[10px] font-bold tracking-wider ${
+                            log.blocked
+                              ? "bg-red-950/80 text-red-400 border border-red-800"
+                              : "bg-emerald-950/80 text-emerald-400 border border-emerald-800"
+                          }`}
                         >
-                          {log.detected_keywords.join(", ")}
-                        </div>
-                      ) : (
-                        <span className="text-zinc-600">[NINGUNO]</span>
-                      )}
-                    </td>
-
-                    <td className="py-3 px-5 whitespace-nowrap">
-                      <span
-                        className={`px-2 py-0.5 text-[11px] font-bold border ${getSeverityStyle(
-                          log.highest_severity
-                        )}`}
-                      >
-                        {log.highest_severity} ({log.risk_score}%)
-                      </span>
-                    </td>
-
-                    <td className="py-3 px-5 whitespace-nowrap text-right">
-                      <button
-                        onClick={() => setSelectedLog(log)}
-                        className="px-2.5 py-1 text-[11px] text-zinc-300 hover:text-white border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 transition-colors"
-                      >
-                        [FORENSE]
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                          {log.action_taken}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span
+                          className={`inline-block px-1.5 py-0.5 text-[10px] font-bold border ${sevStyle}`}
+                        >
+                          {log.highest_severity}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className={`font-bold ${getRiskScoreColor(log.risk_score)}`}>
+                          {log.risk_score}%
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-zinc-300 max-w-xs truncate text-[11px]">
+                        {log.prompt_text}
+                      </td>
+                      <td className="py-3 px-4 text-zinc-500 text-[11px]">{log.client_ip}</td>
+                      <td className="py-3 px-4 text-right">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedLog(log);
+                          }}
+                          className="px-2 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 text-[10px] font-bold"
+                        >
+                          [DETALLES]
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         )}
-
-        <div className="px-5 py-3 bg-[#0c0c0e] border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-mono flex-wrap gap-2">
-          <span>{filteredLogs.length} eventos listados</span>
-          <span>STORE: SECURITY_AUDIT_LOGS</span>
-        </div>
       </div>
 
       {selectedLog && (
@@ -248,6 +243,18 @@ export const AuditLogTable: React.FC<AuditLogTableProps> = ({
                 </div>
               </div>
             )}
+
+            {/* Módulo de Inteligencia de Amenazas IA */}
+            <ThreatIntelCard
+              promptText={selectedLog.prompt_text}
+              auditId={selectedLog.id}
+              clientIp={selectedLog.client_ip}
+              isAuthenticated={isAuthenticated}
+              onRequireAuth={onRequireAuth}
+              onRuleApplied={() => {
+                if (onRuleApplied) onRuleApplied();
+              }}
+            />
 
             <div className="w-full min-w-0 space-y-1">
               <span className="text-zinc-400 font-semibold block uppercase tracking-wider text-[11px]">

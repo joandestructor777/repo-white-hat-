@@ -5,6 +5,9 @@ import { WebsiteAssistantView } from "./features/assistant-simulator/components/
 import { RuleTable } from "./features/security-rules/components/RuleTable";
 import { AuditLogTable } from "./features/audit-logs/components/AuditLogTable";
 import { CompenHackPortal } from "./features/compenhack/components/CompenHackPortal";
+import { ThreatIntelWorkbench } from "./features/threat-intel/components/ThreatIntelWorkbench";
+import { AuthModal } from "./features/auth/components/AuthModal";
+import { useAuth } from "./features/auth/hooks/useAuth";
 import { useRules } from "./features/security-rules/hooks/useRules";
 import { useAuditLogs } from "./features/audit-logs/hooks/useAuditLogs";
 import { useUserProfile } from "./shared/hooks/useUserProfile";
@@ -25,6 +28,19 @@ export const App: React.FC = () => {
   });
   const [backendOnline, setBackendOnline] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Hook de autenticación JWT
+  const {
+    user: authUser,
+    isAuthenticated,
+    loading: authLoading,
+    error: authError,
+    login,
+    register,
+    logout,
+    clearError,
+  } = useAuth();
 
   useEffect(() => {
     try {
@@ -82,6 +98,10 @@ export const App: React.FC = () => {
         backendOnline={backendOnline}
         profile={profile}
         onOpenProfile={() => setIsProfileModalOpen(true)}
+        authUser={authUser}
+        isAuthenticated={isAuthenticated}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onLogout={logout}
       />
 
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
@@ -91,18 +111,25 @@ export const App: React.FC = () => {
             <span className="text-zinc-200 font-semibold tracking-wide">
               {currentTab === APP_ROUTES.DASHBOARD && "PANEL DE CONTROL FORENSE"}
               {currentTab === APP_ROUTES.SIMULATOR && "SANDBOX DE EVALUACIÓN HEURÍSTICA"}
-              {currentTab === APP_ROUTES.RULES && "MATRIZ DE REGLAS Y POLÍTICAS"}
+              {currentTab === APP_ROUTES.RULES && "MATRIZ DE REGLAS Y POLÍTICAS (CRUD)"}
               {currentTab === APP_ROUTES.AUDIT && "REGISTRO DE AUDITORÍA Y TRAZABILIDAD"}
+              {currentTab === APP_ROUTES.THREAT_INTEL && "AGENTE SOC • INTELIGENCIA DE AMENAZAS IA"}
             </span>
           </div>
 
           <div className="flex items-center gap-4 text-zinc-500">
             <div className="hidden sm:flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-none inline-block"></span>
-              <span className="text-[11px] text-zinc-400">DEFENSIVE GUARDRAIL</span>
+              <span
+                className={`w-1.5 h-1.5 rounded-none inline-block ${
+                  isAuthenticated ? "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]" : "bg-amber-500"
+                }`}
+              ></span>
+              <span className="text-[11px] text-zinc-400">
+                {isAuthenticated ? `SESIÓN: ${authUser?.username} (${authUser?.role})` : "MODO INVITADO"}
+              </span>
             </div>
             <span className="text-zinc-700">|</span>
-            <span className="text-[11px] text-zinc-400">SOC ENGINE</span>
+            <span className="text-[11px] text-zinc-400">SOC ENGINE v3.0</span>
           </div>
         </header>
 
@@ -131,6 +158,8 @@ export const App: React.FC = () => {
               onDeleteRule={deleteRule}
               onSeedDefaults={seedDefaults}
               onRefresh={refreshRules}
+              isAuthenticated={isAuthenticated}
+              onRequireAuth={() => setIsAuthModalOpen(true)}
             />
           )}
 
@@ -139,6 +168,17 @@ export const App: React.FC = () => {
               logs={logs}
               loading={logsLoading}
               onRefresh={refreshLogs}
+              isAuthenticated={isAuthenticated}
+              onRequireAuth={() => setIsAuthModalOpen(true)}
+              onRuleApplied={refreshRules}
+            />
+          )}
+
+          {currentTab === APP_ROUTES.THREAT_INTEL && (
+            <ThreatIntelWorkbench
+              isAuthenticated={isAuthenticated}
+              onRequireAuth={() => setIsAuthModalOpen(true)}
+              onRuleApplied={refreshRules}
             />
           )}
         </main>
@@ -146,7 +186,7 @@ export const App: React.FC = () => {
         <footer className="border-t border-zinc-900 bg-[#070709] py-4 px-6 text-center text-xs text-zinc-500 font-mono mt-auto">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <span>JoanVector • Enterprise Cybersecurity Architecture</span>
-            <span className="text-[11px] text-zinc-600">FastAPI • SQLite / PostgreSQL • Vite</span>
+            <span className="text-[11px] text-zinc-600">FastAPI • JWT Security • LLM Threat Intel • Vite</span>
           </div>
         </footer>
       </div>
@@ -158,6 +198,16 @@ export const App: React.FC = () => {
         onSaveProfile={updateProfile}
         onUploadImage={uploadCustomImage}
         onRemoveAvatar={removeAvatar}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={login}
+        onRegister={register}
+        loading={authLoading}
+        error={authError}
+        onClearError={clearError}
       />
     </div>
   );

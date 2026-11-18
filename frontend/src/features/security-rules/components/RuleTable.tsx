@@ -15,6 +15,8 @@ interface RuleTableProps {
   onDeleteRule: (id: number) => Promise<any>;
   onSeedDefaults: () => Promise<any>;
   onRefresh: () => void;
+  isAuthenticated?: boolean;
+  onRequireAuth?: () => void;
 }
 
 export const RuleTable: React.FC<RuleTableProps> = ({
@@ -26,6 +28,8 @@ export const RuleTable: React.FC<RuleTableProps> = ({
   onDeleteRule,
   onSeedDefaults,
   onRefresh,
+  isAuthenticated = false,
+  onRequireAuth = () => {},
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
@@ -48,13 +52,45 @@ export const RuleTable: React.FC<RuleTableProps> = ({
   }, [rules, searchTerm, categoryFilter, severityFilter]);
 
   const handleOpenAdd = () => {
+    if (!isAuthenticated) {
+      onRequireAuth();
+      return;
+    }
     setEditingRule(null);
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (rule: SecurityRule) => {
+    if (!isAuthenticated) {
+      onRequireAuth();
+      return;
+    }
     setEditingRule(rule);
     setIsModalOpen(true);
+  };
+
+  const handleToggle = (id: number, currentActive: boolean) => {
+    if (!isAuthenticated) {
+      onRequireAuth();
+      return;
+    }
+    onToggleActive(id, currentActive);
+  };
+
+  const handleDelete = (id: number) => {
+    if (!isAuthenticated) {
+      onRequireAuth();
+      return;
+    }
+    onDeleteRule(id);
+  };
+
+  const handleSeed = () => {
+    if (!isAuthenticated) {
+      onRequireAuth();
+      return;
+    }
+    onSeedDefaults();
   };
 
   const handleSubmitModal = async (input: SecurityRuleInput) => {
@@ -74,6 +110,15 @@ export const RuleTable: React.FC<RuleTableProps> = ({
             <span className="text-[11px] font-mono uppercase text-zinc-400 tracking-wider">
               DEFENSE POLICY MATRIX - CRUD
             </span>
+            {isAuthenticated ? (
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 ml-2">
+                [AUTORIZADO JWT]
+              </span>
+            ) : (
+              <span className="text-[10px] font-mono text-amber-400 bg-amber-950/40 border border-amber-800 px-2 py-0.5 ml-2">
+                [SOLO LECTURA - INICIA SESIÓN PARA EDITAR]
+              </span>
+            )}
           </div>
           <h2 className="text-lg font-bold text-white tracking-tight font-mono">
             POLÍTICAS DE DETECCIÓN & PALABRAS CLAVE
@@ -87,7 +132,7 @@ export const RuleTable: React.FC<RuleTableProps> = ({
           <Button
             variant="secondary"
             size="md"
-            onClick={onSeedDefaults}
+            onClick={handleSeed}
             className="font-mono text-xs"
           >
             <span>[RESTAURAR OWASP TOP 10]</span>
@@ -118,12 +163,12 @@ export const RuleTable: React.FC<RuleTableProps> = ({
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full bg-black/60 border border-zinc-800 px-3.5 py-2 text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
+            className="w-full bg-black/60 border border-zinc-800 px-3.5 py-2 text-xs text-white focus:outline-none focus:border-zinc-500 font-mono"
           >
-            <option value="ALL">TODAS LAS CATEGORÍAS ({rules.length})</option>
-            {SECURITY_CATEGORIES.map((c) => (
-              <option key={c.value} value={c.value}>
-                {c.label}
+            <option value="ALL">Todas las Categorías OWASP</option>
+            {SECURITY_CATEGORIES.map((cat) => (
+              <option key={cat.value} value={cat.value}>
+                {cat.label}
               </option>
             ))}
           </select>
@@ -133,13 +178,13 @@ export const RuleTable: React.FC<RuleTableProps> = ({
           <select
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
-            className="w-full bg-black/60 border border-zinc-800 px-3.5 py-2 text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
+            className="w-full bg-black/60 border border-zinc-800 px-3.5 py-2 text-xs text-white focus:outline-none focus:border-zinc-500 font-mono"
           >
-            <option value="ALL">TODAS LAS SEVERIDADES</option>
-            <option value="CRITICAL">CRÍTICA (CRITICAL)</option>
-            <option value="HIGH">ALTA (HIGH)</option>
-            <option value="MEDIUM">MEDIA (MEDIUM)</option>
-            <option value="LOW">BAJA (LOW)</option>
+            <option value="ALL">Todos los Niveles de Severidad</option>
+            <option value="CRITICAL">Crítico (Bloqueo Inmediato)</option>
+            <option value="HIGH">Alto</option>
+            <option value="MEDIUM">Medio</option>
+            <option value="LOW">Bajo</option>
           </select>
         </div>
       </div>
@@ -147,34 +192,36 @@ export const RuleTable: React.FC<RuleTableProps> = ({
       <div className="border border-zinc-800 bg-[#070709] w-full min-w-0">
         {loading && rules.length === 0 ? (
           <div className="p-16 text-center text-zinc-500 text-xs font-mono">
-            [RECUPERANDO REGLAS DE SEGURIDAD...]
+            [RECUPERANDO MATRIZ DE REGLAS PERIMETRALES...]
           </div>
         ) : filteredRules.length === 0 ? (
           <div className="p-16 text-center text-zinc-500 text-xs font-mono">
-            No se encontraron políticas que coincidan con los filtros aplicados.
+            No se encontraron reglas coincidentes con los filtros actuales.
           </div>
         ) : (
           <div className="overflow-x-auto w-full">
-            <table className="w-full text-left border-collapse text-xs min-w-[780px]">
+            <table className="w-full text-left border-collapse text-xs min-w-[760px]">
               <thead>
                 <tr className="border-b border-zinc-800 bg-[#0c0c0e] text-zinc-400 font-mono uppercase tracking-wider text-[11px]">
-                  <th className="py-3 px-5 w-28 font-semibold">Estado</th>
-                  <th className="py-3 px-5 font-semibold">Regla & Vector</th>
-                  <th className="py-3 px-5 font-semibold">Término / Patrón</th>
-                  <th className="py-3 px-5 font-semibold">Categoría</th>
-                  <th className="py-3 px-5 font-semibold">Severidad</th>
-                  <th className="py-3 px-5 font-semibold">Acción</th>
-                  <th className="py-3 px-5 text-right w-36 font-semibold">Operaciones</th>
+                  <th className="py-3 px-5 font-semibold w-24">ESTADO</th>
+                  <th className="py-3 px-5 font-semibold">REGLA / DESCRIPCIÓN</th>
+                  <th className="py-3 px-5 font-semibold">FIRMA O KEYWORD</th>
+                  <th className="py-3 px-5 font-semibold">CATEGORÍA</th>
+                  <th className="py-3 px-5 font-semibold">SEVERIDAD</th>
+                  <th className="py-3 px-5 font-semibold">ACCIÓN</th>
+                  <th className="py-3 px-5 font-semibold text-right">ACCIONES</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/60 font-mono">
                 {filteredRules.map((rule) => (
-                  <tr key={rule.id} className="hover:bg-zinc-900/40 transition-colors">
+                  <tr
+                    key={rule.id}
+                    className="hover:bg-zinc-900/40 transition-colors group"
+                  >
                     <td className="py-3 px-5 whitespace-nowrap">
                       <button
-                        onClick={() => onToggleActive(rule.id, rule.is_active)}
-                        className="cursor-pointer text-[11px] font-bold"
-                        title="Alternar estado de regla"
+                        onClick={() => handleToggle(rule.id, rule.is_active)}
+                        className="text-[11px] font-bold focus:outline-none"
                       >
                         {rule.is_active ? (
                           <span className="text-emerald-400">[● ACTIVA]</span>
@@ -238,12 +285,8 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                         [EDIT]
                       </button>
                       <button
-                        onClick={() => {
-                          if (confirm(`¿Eliminar la regla "${rule.name}" permanentemente?`)) {
-                            onDeleteRule(rule.id);
-                          }
-                        }}
-                        className="px-2 py-0.5 text-[11px] text-rose-400 hover:text-rose-200 border border-zinc-800 hover:border-rose-900 bg-rose-950/20 transition-colors"
+                        onClick={() => handleDelete(rule.id)}
+                        className="px-2 py-0.5 text-[11px] text-red-500/80 hover:text-red-400 border border-zinc-800 hover:border-red-900 bg-zinc-900 transition-colors"
                         title="Eliminar regla"
                       >
                         [DEL]
@@ -255,18 +298,13 @@ export const RuleTable: React.FC<RuleTableProps> = ({
             </table>
           </div>
         )}
-
-        <div className="px-5 py-3 bg-[#0c0c0e] border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500 font-mono flex-wrap gap-2">
-          <span>Total de políticas registradas: {rules.length} (Filtradas: {filteredRules.length})</span>
-          <span className="text-[11px]">INTERCEPTOR PERIMETRAL - ON</span>
-        </div>
       </div>
 
       <RuleFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmitModal}
-        initialData={editingRule}
+        initialData={editingRule || undefined}
       />
     </div>
   );

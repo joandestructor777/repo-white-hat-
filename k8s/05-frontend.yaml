@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: joanvector-frontend
+  labels:
+    app: joanvector-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: joanvector-frontend
+  template:
+    metadata:
+      labels:
+        app: joanvector-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: joandestructor777/joanvector-frontend:v3.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: NodePort
+  selector:
+    app: joanvector-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30030

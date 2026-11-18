@@ -3,6 +3,7 @@ export const APP_ROUTES = {
   SIMULATOR: "simulator",
   RULES: "rules",
   AUDIT: "audit",
+  THREAT_INTEL: "threat-intel",
   COMPENHACK: "compenhack",
 } as const;
 

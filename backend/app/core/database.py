@@ -34,7 +34,9 @@ def get_db():
 def init_db():
     from app.models.rule import SecurityRule
     from app.models.audit_log import SecurityAuditLog
+    from app.models.user import User
     from app.seeds.default_rules import SEED_RULES
+    from app.core.security import get_password_hash
     
     Base.metadata.create_all(bind=engine)
     
@@ -45,6 +47,18 @@ def init_db():
             for item in SEED_RULES:
                 rule = SecurityRule(**item)
                 db.add(rule)
+            db.commit()
+            
+        demo_user = db.query(User).filter(User.username == "analista").first()
+        if not demo_user:
+            demo_user = User(
+                username="analista",
+                email="analista@joanvector.local",
+                hashed_password=get_password_hash("Password123!"),
+                role="SOC Lead Analyst",
+                is_active=True
+            )
+            db.add(demo_user)
             db.commit()
     except Exception as e:
         logger.error(f"[DB Error]: {e}")
