@@ -163,3 +163,47 @@ def get_optional_current_user(
     if not user_id:
         return None
     return db.query(User).filter(User.id == int(user_id)).first()
+
+# ==========================================
+# Control de Acceso Basado en Roles (RBAC)
+# ==========================================
+WRITE_ROLES = ["administrator", "admin", "soc lead analyst", "security engineer"]
+ADMIN_ROLES = ["administrator", "admin"]
+
+def require_roles(allowed_roles: list[str]):
+    """Genera una dependencia que valida que el rol del usuario esté en la lista permitida."""
+    def role_checker(current_user: User = Depends(get_current_user)) -> User:
+        user_role = (current_user.role or "").strip().lower()
+        normalized_allowed = [r.strip().lower() for r in allowed_roles]
+        
+        # El administrador siempre tiene acceso total
+        if user_role in ADMIN_ROLES or "admin" in user_role:
+            return current_user
+            
+        if not any(allowed in user_role for allowed in normalized_allowed):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Acceso denegado: El rol '{current_user.role}' no tiene permisos suficientes para realizar esta acción. Roles autorizados: {', '.join(allowed_roles)}"
+            )
+        return current_user
+    return role_checker
+
+def require_write_role(current_user: User = Depends(get_current_user)) -> User:
+    """Verifica que el usuario tenga permisos de escritura (Admin, SOC Lead o Security Engineer)."""
+    user_role = (current_user.role or "").strip().lower()
+    if user_role == "auditor externo" or "auditor" in user_role:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acceso denegado: El rol 'Auditor Externo' es de Solo Lectura. No tiene permisos para modificar o eliminar políticas del Gateway."
+        )
+    return current_user
+
+def require_admin_role(current_user: User = Depends(get_current_user)) -> User:
+    """Verifica que el usuario sea Administrador."""
+    user_role = (current_user.role or "").strip().lower()
+    if user_role not in ADMIN_ROLES and "admin" not in user_role:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Acceso denegado: Esta operación requiere privilegios de Administrador (Rol actual: '{current_user.role}')."
+        )
+    return current_user

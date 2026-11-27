@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.models.user import User
-from app.core.security import get_current_user
+from app.core.security import get_current_user, require_write_role
 from app.core.metrics import AI_INFERENCES_TOTAL, AI_THREATS_IDENTIFIED, THREAT_RISK_GAUGE
 from app.schemas.threat_intel_schema import (
     ThreatAnalysisRequest,
@@ -50,7 +50,7 @@ def analyze_threat_payload(payload: ThreatAnalysisRequest):
 def apply_suggested_rule(
     rule_data: SuggestedRule,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(require_write_role)
 ):
     """
     Aplica inmediatamente la regla de seguridad generada por la IA al perimeter gateway.

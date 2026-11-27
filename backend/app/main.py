@@ -29,6 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Middleware de Observabilidad Prometheus
 @app.middleware("http")
 async def prometheus_metrics_middleware(request: Request, call_next):

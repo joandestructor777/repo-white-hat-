@@ -32,9 +32,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     onClearError();
   };
 
-  const handleFillDemo = () => {
-    setUsername("analista");
-    setPassword("Password123!");
+  const handleFillDemo = (demoUser: "admin" | "analista" | "auditor") => {
+    if (demoUser === "admin") {
+      setUsername("admin");
+      setPassword("AdminPassword123!");
+    } else if (demoUser === "auditor") {
+      setUsername("auditor");
+      setPassword("AuditorPassword123!");
+    } else {
+      setUsername("analista");
+      setPassword("Password123!");
+    }
     onClearError();
   };
 
@@ -90,20 +98,38 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </button>
         </div>
 
-        {/* Botón de Pruebas Rápidas */}
+        {/* Botones de Pruebas Rápidas de Roles */}
         {tab === "login" && (
-          <div className="p-3 bg-zinc-950/80 border border-zinc-800 flex items-center justify-between gap-2">
-            <div>
-              <span className="text-[10px] text-zinc-500 block uppercase">Credencial de Sustentación:</span>
-              <span className="text-zinc-300 font-bold">analista / Password123!</span>
+          <div className="p-3 bg-zinc-950/80 border border-zinc-800 space-y-2">
+            <span className="text-[10px] text-zinc-500 block uppercase font-bold">
+              Autocompletar Credenciales por Rol (Demostración RBAC):
+            </span>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => handleFillDemo("admin")}
+                className="px-2 py-1.5 text-[10px] bg-red-950/40 border border-red-700/80 text-red-300 hover:bg-red-900/50 transition-colors uppercase font-bold text-center"
+              >
+                [ADMIN]
+                <span className="block text-[8px] text-zinc-400 font-normal">Acceso Total</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleFillDemo("analista")}
+                className="px-2 py-1.5 text-[10px] bg-emerald-950/40 border border-emerald-700/80 text-emerald-300 hover:bg-emerald-900/50 transition-colors uppercase font-bold text-center"
+              >
+                [SOC LEAD]
+                <span className="block text-[8px] text-zinc-400 font-normal">Forense + Reglas</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleFillDemo("auditor")}
+                className="px-2 py-1.5 text-[10px] bg-amber-950/40 border border-amber-700/80 text-amber-300 hover:bg-amber-900/50 transition-colors uppercase font-bold text-center"
+              >
+                [AUDITOR]
+                <span className="block text-[8px] text-zinc-400 font-normal">Solo Lectura</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleFillDemo}
-              className="px-2.5 py-1 text-[10px] bg-emerald-950/60 border border-emerald-700 text-emerald-300 hover:bg-emerald-900/60 transition-colors uppercase font-bold"
-            >
-              Autocompletar
-            </button>
           </div>
         )}
 
@@ -162,17 +188,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {tab === "register" && (
             <div>
               <label className="block text-zinc-400 uppercase text-[10px] font-semibold mb-1">
-                Rol Operativo en SOC
+                Rol Operativo en SOC (Permisos RBAC)
               </label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
                 className="w-full bg-black border border-zinc-800 px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
               >
-                <option value="SOC Lead Analyst">SOC Lead Analyst (Forense)</option>
-                <option value="Security Engineer">Security Engineer (Reglas y Políticas)</option>
-                <option value="Auditor Externo">Auditor Externo (Solo Lectura)</option>
+                <option value="Administrator">Administrator (Control Total y Gestión)</option>
+                <option value="SOC Lead Analyst">SOC Lead Analyst (Forense e Inyección de Reglas)</option>
+                <option value="Security Engineer">Security Engineer (Políticas y Reglas)</option>
+                <option value="Auditor Externo">Auditor Externo (Solo Lectura • Normativo)</option>
               </select>
+              <p className="text-[10px] text-zinc-500 mt-1 font-mono">
+                {role === "Auditor Externo"
+                  ? "⚠️ Rol de solo lectura: Puede consultar telemetría pero no modificar reglas."
+                  : role === "Administrator"
+                  ? "🛡️ Privilegios administrativos completos en todo el Gateway."
+                  : "✓ Permisos estándar de operador de seguridad."}
+              </p>
             </div>
           )}
 

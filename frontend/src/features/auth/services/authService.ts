@@ -53,6 +53,21 @@ export const authService = {
     return res.data;
   },
 
+  async getDemoAccounts(): Promise<Array<{ role: string; username: string; password: string; badge: string; description: string }>> {
+    const res = await apiClient.get("/auth/demo-accounts");
+    return res.data;
+  },
+
+  async getAllUsers(): Promise<AuthUser[]> {
+    const res = await apiClient.get<AuthUser[]>("/auth/users");
+    return res.data;
+  },
+
+  async getRolesMatrix(): Promise<any[]> {
+    const res = await apiClient.get("/auth/roles");
+    return res.data;
+  },
+
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);

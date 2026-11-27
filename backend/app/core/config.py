@@ -14,9 +14,9 @@ class Settings(BaseSettings):
     SERVER_PORT: int = int(os.getenv("SERVER_PORT", os.getenv("PORT", "8000")))
     CORS_ORIGINS: List[str] = ["*"]
     
-    POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "localhost")
+    POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "127.0.0.1")
     POSTGRES_USER: str = os.getenv("POSTGRES_USER", "postgres")
-    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "postgres")
+    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "")
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "ai_guardrail_db")
     POSTGRES_PORT: str = os.getenv("POSTGRES_PORT", "5432")
     
@@ -30,11 +30,12 @@ class Settings(BaseSettings):
     RECENT_EVENTS_LIMIT: int = 8
 
     def get_database_url(self) -> str:
-        if self.DATABASE_URL:
-            url = self.DATABASE_URL
+        if self.DATABASE_URL and self.DATABASE_URL.strip():
+            url = self.DATABASE_URL.strip()
             if url.startswith("postgres://"):
                 url = url.replace("postgres://", "postgresql://", 1)
             return url
-        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        auth_part = f"{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}" if self.POSTGRES_PASSWORD else self.POSTGRES_USER
+        return f"postgresql://{auth_part}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
 settings = Settings()

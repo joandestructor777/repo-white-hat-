@@ -10,6 +10,8 @@ interface ThreatIntelCardProps {
   onRequireAuth: () => void;
   onRuleApplied?: () => void;
   autoAnalyze?: boolean;
+  canWrite?: boolean;
+  userRole?: string;
 }
 
 export const ThreatIntelCard: React.FC<ThreatIntelCardProps> = ({
@@ -20,6 +22,8 @@ export const ThreatIntelCard: React.FC<ThreatIntelCardProps> = ({
   onRequireAuth,
   onRuleApplied,
   autoAnalyze = false,
+  canWrite = true,
+  userRole = "Invitado",
 }) => {
   const [analysis, setAnalysis] = useState<ThreatAnalysisResult | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
@@ -52,6 +56,10 @@ export const ThreatIntelCard: React.FC<ThreatIntelCardProps> = ({
     if (!analysis) return;
     if (!isAuthenticated) {
       onRequireAuth();
+      return;
+    }
+    if (!canWrite) {
+      setError(`Acceso denegado (RBAC): El rol '${userRole}' tiene permisos de Solo Lectura. No puedes inyectar reglas en el Gateway.`);
       return;
     }
 
@@ -201,10 +209,19 @@ export const ThreatIntelCard: React.FC<ThreatIntelCardProps> = ({
                 <button
                   type="button"
                   onClick={handleApplyRule}
-                  disabled={applying}
-                  className="px-4 py-2 bg-emerald-950/90 hover:bg-emerald-900 border-2 border-emerald-500 text-emerald-100 hover:text-white font-mono text-xs font-bold transition-all shadow-[0_0_12px_rgba(16,185,129,0.4)] cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
+                  disabled={applying || (!canWrite && isAuthenticated)}
+                  className={`px-4 py-2 border-2 font-mono text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    !canWrite && isAuthenticated
+                      ? "bg-zinc-900 border-zinc-700 text-zinc-500 opacity-50 cursor-not-allowed shadow-none"
+                      : "bg-emerald-950/90 hover:bg-emerald-900 border-emerald-500 text-emerald-100 hover:text-white shadow-[0_0_12px_rgba(16,185,129,0.4)]"
+                  }`}
+                  title={!canWrite && isAuthenticated ? "El rol Auditor Externo tiene permisos de solo lectura" : "Inyectar regla en el Gateway"}
                 >
-                  {applying ? "[APLICANDO...]" : "[APLICAR REGLA EN EL GATEWAY]"}
+                  {applying
+                    ? "[APLICANDO...]"
+                    : !canWrite && isAuthenticated
+                    ? "🔒 [BLOQUEADO: SOLO LECTURA]"
+                    : "[APLICAR REGLA EN EL GATEWAY]"}
                 </button>
               )}
             </div>

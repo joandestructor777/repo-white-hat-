@@ -49,17 +49,42 @@ def init_db():
                 db.add(rule)
             db.commit()
             
-        demo_user = db.query(User).filter(User.username == "analista").first()
-        if not demo_user:
-            demo_user = User(
-                username="analista",
-                email="analista@joanvector.local",
-                hashed_password=get_password_hash("Password123!"),
-                role="SOC Lead Analyst",
-                is_active=True
-            )
-            db.add(demo_user)
-            db.commit()
+        # Usuarios precargados para demostración y pruebas de Roles (RBAC)
+        default_users = [
+            {
+                "username": "admin",
+                "email": "admin@joanvector.local",
+                "password": "AdminPassword123!",
+                "role": "Administrator",
+                "is_active": True
+            },
+            {
+                "username": "analista",
+                "email": "analista@joanvector.local",
+                "password": "Password123!",
+                "role": "SOC Lead Analyst",
+                "is_active": True
+            },
+            {
+                "username": "auditor",
+                "email": "auditor@joanvector.local",
+                "password": "AuditorPassword123!",
+                "role": "Auditor Externo",
+                "is_active": True
+            }
+        ]
+        for u_data in default_users:
+            existing = db.query(User).filter(User.username == u_data["username"]).first()
+            if not existing:
+                new_u = User(
+                    username=u_data["username"],
+                    email=u_data["email"],
+                    hashed_password=get_password_hash(u_data["password"]),
+                    role=u_data["role"],
+                    is_active=u_data["is_active"]
+                )
+                db.add(new_u)
+        db.commit()
     except Exception as e:
         logger.error(f"[DB Error]: {e}")
         db.rollback()

@@ -6,6 +6,8 @@ interface ThreatIntelWorkbenchProps {
   isAuthenticated: boolean;
   onRequireAuth: () => void;
   onRuleApplied?: () => void;
+  canWrite?: boolean;
+  userRole?: string;
 }
 
 const PRESET_ATTACKS = [
@@ -31,6 +33,8 @@ export const ThreatIntelWorkbench: React.FC<ThreatIntelWorkbenchProps> = ({
   isAuthenticated,
   onRequireAuth,
   onRuleApplied,
+  canWrite = true,
+  userRole = "Invitado",
 }) => {
   const [customPrompt, setCustomPrompt] = useState(PRESET_ATTACKS[0].prompt);
   const [analyzedPrompt, setAnalyzedPrompt] = useState(PRESET_ATTACKS[0].prompt);
@@ -139,6 +143,8 @@ export const ThreatIntelWorkbench: React.FC<ThreatIntelWorkbenchProps> = ({
           isAuthenticated={isAuthenticated}
           onRequireAuth={onRequireAuth}
           onRuleApplied={onRuleApplied}
+          canWrite={canWrite}
+          userRole={userRole}
         />
       )}
     </div>

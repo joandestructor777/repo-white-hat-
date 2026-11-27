@@ -188,12 +188,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </span>
               <span
                 className={`font-mono text-[9px] uppercase px-1 border ${
-                  isAuthenticated
-                    ? "text-emerald-400 border-emerald-800 bg-emerald-950/40"
-                    : "text-amber-400 border-amber-800 bg-amber-950/40"
+                  !isAuthenticated
+                    ? "text-amber-400 border-amber-800 bg-amber-950/40"
+                    : displayRole.toLowerCase().includes("admin")
+                    ? "text-red-400 border-red-700 bg-red-950/60 font-bold"
+                    : displayRole.toLowerCase().includes("auditor")
+                    ? "text-amber-400 border-amber-700 bg-amber-950/60 font-bold"
+                    : "text-emerald-400 border-emerald-800 bg-emerald-950/40 font-bold"
                 }`}
               >
-                {isAuthenticated ? "JWT AUTH" : "INVITADO"}
+                {!isAuthenticated
+                  ? "INVITADO"
+                  : displayRole.toLowerCase().includes("admin")
+                  ? "ADMIN"
+                  : displayRole.toLowerCase().includes("auditor")
+                  ? "AUDITOR"
+                  : "OPERADOR"}
               </span>
             </div>
             <div className="text-[10px] font-mono text-zinc-500 truncate">

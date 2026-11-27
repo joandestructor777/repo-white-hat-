@@ -30,10 +30,17 @@ export const App: React.FC = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Hook de autenticación JWT
+  // Hook de autenticación JWT y Roles RBAC
   const {
     user: authUser,
     isAuthenticated,
+    userRole,
+    isAdmin,
+    isAuditor,
+    canWrite,
+    canDelete,
+    allUsers,
+    fetchAllUsers,
     loading: authLoading,
     error: authError,
     login,
@@ -121,11 +128,19 @@ export const App: React.FC = () => {
             <div className="hidden sm:flex items-center gap-2">
               <span
                 className={`w-1.5 h-1.5 rounded-none inline-block ${
-                  isAuthenticated ? "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]" : "bg-amber-500"
+                  !isAuthenticated
+                    ? "bg-amber-500"
+                    : isAuditor
+                    ? "bg-amber-400"
+                    : isAdmin
+                    ? "bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)]"
+                    : "bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]"
                 }`}
               ></span>
               <span className="text-[11px] text-zinc-400">
-                {isAuthenticated ? `SESIÓN: ${authUser?.username} (${authUser?.role})` : "MODO INVITADO"}
+                {isAuthenticated
+                  ? `SESIÓN: ${authUser?.username} [${authUser?.role}]`
+                  : "MODO INVITADO (SOLO LECTURA)"}
               </span>
             </div>
             <span className="text-zinc-700">|</span>
@@ -160,6 +175,9 @@ export const App: React.FC = () => {
               onRefresh={refreshRules}
               isAuthenticated={isAuthenticated}
               onRequireAuth={() => setIsAuthModalOpen(true)}
+              userRole={userRole}
+              canWrite={canWrite}
+              canDelete={canDelete}
             />
           )}
 
@@ -179,6 +197,8 @@ export const App: React.FC = () => {
               isAuthenticated={isAuthenticated}
               onRequireAuth={() => setIsAuthModalOpen(true)}
               onRuleApplied={refreshRules}
+              canWrite={canWrite}
+              userRole={userRole}
             />
           )}
         </main>
@@ -198,6 +218,7 @@ export const App: React.FC = () => {
         onSaveProfile={updateProfile}
         onUploadImage={uploadCustomImage}
         onRemoveAvatar={removeAvatar}
+        authUser={authUser}
       />
 
       <AuthModal

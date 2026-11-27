@@ -57,6 +57,19 @@ export const useAuth = () => {
     }
   }, []);
 
+  const [allUsers, setAllUsers] = useState<AuthUser[]>([]);
+
+  const fetchAllUsers = useCallback(async () => {
+    try {
+      const users = await authService.getAllUsers();
+      setAllUsers(users);
+      return users;
+    } catch (e) {
+      console.warn("No se pudo obtener la lista de usuarios", e);
+      return [];
+    }
+  }, []);
+
   const logout = useCallback(() => {
     authService.logout();
     setUser(null);
@@ -64,9 +77,23 @@ export const useAuth = () => {
     setError(null);
   }, []);
 
+  const userRole = user?.role || "Invitado";
+  const roleLower = userRole.toLowerCase();
+  const isAdmin = roleLower.includes("admin");
+  const isAuditor = roleLower.includes("auditor");
+  const canWrite = isAuthenticated && !isAuditor;
+  const canDelete = isAuthenticated && (isAdmin || roleLower.includes("soc lead"));
+
   return {
     user,
     isAuthenticated,
+    userRole,
+    isAdmin,
+    isAuditor,
+    canWrite,
+    canDelete,
+    allUsers,
+    fetchAllUsers,
     loading,
     error,
     login,

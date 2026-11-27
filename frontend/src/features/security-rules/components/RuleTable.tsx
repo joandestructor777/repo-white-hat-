@@ -17,6 +17,9 @@ interface RuleTableProps {
   onRefresh: () => void;
   isAuthenticated?: boolean;
   onRequireAuth?: () => void;
+  userRole?: string;
+  canWrite?: boolean;
+  canDelete?: boolean;
 }
 
 export const RuleTable: React.FC<RuleTableProps> = ({
@@ -30,6 +33,9 @@ export const RuleTable: React.FC<RuleTableProps> = ({
   onRefresh,
   isAuthenticated = false,
   onRequireAuth = () => {},
+  userRole = "Invitado",
+  canWrite = false,
+  canDelete = false,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("ALL");
@@ -56,6 +62,10 @@ export const RuleTable: React.FC<RuleTableProps> = ({
       onRequireAuth();
       return;
     }
+    if (!canWrite) {
+      alert(`Acceso denegado (RBAC): El rol '${userRole}' tiene permisos de Solo Lectura. No puedes crear reglas.`);
+      return;
+    }
     setEditingRule(null);
     setIsModalOpen(true);
   };
@@ -63,6 +73,10 @@ export const RuleTable: React.FC<RuleTableProps> = ({
   const handleOpenEdit = (rule: SecurityRule) => {
     if (!isAuthenticated) {
       onRequireAuth();
+      return;
+    }
+    if (!canWrite) {
+      alert(`Acceso denegado (RBAC): El rol '${userRole}' tiene permisos de Solo Lectura. No puedes editar reglas.`);
       return;
     }
     setEditingRule(rule);
@@ -74,6 +88,10 @@ export const RuleTable: React.FC<RuleTableProps> = ({
       onRequireAuth();
       return;
     }
+    if (!canWrite) {
+      alert(`Acceso denegado (RBAC): El rol '${userRole}' tiene permisos de Solo Lectura.`);
+      return;
+    }
     onToggleActive(id, currentActive);
   };
 
@@ -82,12 +100,20 @@ export const RuleTable: React.FC<RuleTableProps> = ({
       onRequireAuth();
       return;
     }
+    if (!canDelete) {
+      alert(`Acceso denegado (RBAC): Se requieren privilegios de Administrador o SOC Lead Analyst para eliminar reglas (Rol actual: '${userRole}').`);
+      return;
+    }
     onDeleteRule(id);
   };
 
   const handleSeed = () => {
     if (!isAuthenticated) {
       onRequireAuth();
+      return;
+    }
+    if (!canWrite) {
+      alert(`Acceso denegado (RBAC): El rol '${userRole}' tiene permisos de Solo Lectura.`);
       return;
     }
     onSeedDefaults();
@@ -111,9 +137,15 @@ export const RuleTable: React.FC<RuleTableProps> = ({
               DEFENSE POLICY MATRIX - CRUD
             </span>
             {isAuthenticated ? (
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 ml-2">
-                [AUTORIZADO JWT]
-              </span>
+              canWrite ? (
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 ml-2 font-bold">
+                  [ROL: {userRole.toUpperCase()} • ESCRITURA HABILITADA]
+                </span>
+              ) : (
+                <span className="text-[10px] font-mono text-amber-400 bg-amber-950/40 border border-amber-800 px-2 py-0.5 ml-2 font-bold animate-pulse">
+                  [ROL: {userRole.toUpperCase()} • SOLO LECTURA BLOQUEADO POR RBAC]
+                </span>
+              )
             ) : (
               <span className="text-[10px] font-mono text-amber-400 bg-amber-950/40 border border-amber-800 px-2 py-0.5 ml-2">
                 [SOLO LECTURA - INICIA SESIÓN PARA EDITAR]
@@ -133,7 +165,8 @@ export const RuleTable: React.FC<RuleTableProps> = ({
             variant="secondary"
             size="md"
             onClick={handleSeed}
-            className="font-mono text-xs"
+            disabled={!canWrite && isAuthenticated}
+            className={`font-mono text-xs ${!canWrite && isAuthenticated ? "opacity-40 cursor-not-allowed" : ""}`}
           >
             <span>[RESTAURAR OWASP TOP 10]</span>
           </Button>
@@ -141,9 +174,10 @@ export const RuleTable: React.FC<RuleTableProps> = ({
             variant="primary"
             size="md"
             onClick={handleOpenAdd}
-            className="font-mono text-xs px-5"
+            disabled={!canWrite && isAuthenticated}
+            className={`font-mono text-xs px-5 ${!canWrite && isAuthenticated ? "opacity-40 cursor-not-allowed" : ""}`}
           >
-            <span>[+ NUEVA PALABRA CLAVE]</span>
+            <span>{canWrite || !isAuthenticated ? "[+ NUEVA PALABRA CLAVE]" : "🔒 [+ NUEVA (BLOQUEADO)]"}</span>
           </Button>
         </div>
       </div>
@@ -279,17 +313,27 @@ export const RuleTable: React.FC<RuleTableProps> = ({
                     <td className="py-3 px-5 whitespace-nowrap text-right space-x-2">
                       <button
                         onClick={() => handleOpenEdit(rule)}
-                        className="px-2 py-0.5 text-[11px] text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-600 bg-zinc-900 transition-colors"
-                        title="Modificar regla"
+                        disabled={!canWrite}
+                        className={`px-2 py-0.5 text-[11px] border transition-colors ${
+                          canWrite
+                            ? "text-zinc-400 hover:text-white border-zinc-800 hover:border-zinc-600 bg-zinc-900 cursor-pointer"
+                            : "text-zinc-600 border-zinc-900 bg-zinc-950 opacity-40 cursor-not-allowed"
+                        }`}
+                        title={canWrite ? "Modificar regla" : "Bloqueado: Rol de solo lectura"}
                       >
-                        [EDIT]
+                        {canWrite ? "[EDIT]" : "🔒 [EDIT]"}
                       </button>
                       <button
                         onClick={() => handleDelete(rule.id)}
-                        className="px-2 py-0.5 text-[11px] text-red-500/80 hover:text-red-400 border border-zinc-800 hover:border-red-900 bg-zinc-900 transition-colors"
-                        title="Eliminar regla"
+                        disabled={!canDelete}
+                        className={`px-2 py-0.5 text-[11px] border transition-colors ${
+                          canDelete
+                            ? "text-red-500/80 hover:text-red-400 border-zinc-800 hover:border-red-900 bg-zinc-900 cursor-pointer"
+                            : "text-zinc-600 border-zinc-900 bg-zinc-950 opacity-40 cursor-not-allowed"
+                        }`}
+                        title={canDelete ? "Eliminar regla" : "Bloqueado: Requiere rol Admin o SOC Lead"}
                       >
-                        [DEL]
+                        {canDelete ? "[DEL]" : "🔒 [DEL]"}
                       </button>
                     </td>
                   </tr>
