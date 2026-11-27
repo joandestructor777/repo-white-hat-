@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: joanvector-guardrail
+    runtime: python
+    region: ohio
+    plan: free
+    buildCommand: "npm --prefix frontend install && npm --prefix frontend run build && pip install -r backend/requirements.txt"
+    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DEFAULT_RISK_THRESHOLD
+        value: "40"
+      - key: CRITICAL_RISK_THRESHOLD
+        value: "70"
+      - key: BLOCK_ON_CRITICAL
+        value: "True"
